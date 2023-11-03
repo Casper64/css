@@ -1,0 +1,17 @@
+css/parser/tests/attr_selector.css:1:2: error: expecting an identifier
+    1 | a[] {}
+      |  ^
+    2 | 
+    3 | a[href^"test"] {}
+css/parser/tests/attr_selector.css:3:8: error: expecting "=" after the attribute match type
+    1 | a[] {}
+    2 | 
+    3 | a[href^"test"] {}
+      |        ~~~~~~
+    4 | 
+    5 | a[href=test] {}
+css/parser/tests/attr_selector.css:7:16: error: expecting a "]" to close the attribute selector
+    5 | a[href=test] {}
+    6 | 
+    7 | a[href="#test" {}
+      |                ^

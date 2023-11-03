@@ -1,0 +1,34 @@
+css/parser/tests/pseudo_selector.css:2:11: error: expecting a "(" before ")" inside a selector
+    1 | 
+    2 | a:not.test) {
+      |           ^
+    3 |     color: red;
+    4 | }
+css/parser/tests/pseudo_selector.css:6:6: error: expecting an identifier or ":" after ":" in a selector
+    4 | }
+    5 | 
+    6 | .test: {
+      |      ~~~
+    7 |     color: white;
+    8 | }
+css/parser/tests/pseudo_selector.css:10:13: error: You can not have a pseudo selector function inside of a pseudo selector function
+    8 | }
+    9 | 
+   10 | p:not(.test:has(.other)) {
+      |             ~~~
+   11 |     color: blue;
+   12 | }
+css/parser/tests/pseudo_selector.css:10:24: error: expecting a "(" before ")" inside a selector
+    8 | }
+    9 | 
+   10 | p:not(.test:has(.other)) {
+      |                        ^
+   11 |     color: blue;
+   12 | }
+css/parser/tests/pseudo_selector.css:14:17: error: expecting a closing parenthesis ")" after a pseudo selector
+   12 | }
+   13 | 
+   14 | .test:not(.test {
+      |                 ^
+   15 |     
+   16 | }

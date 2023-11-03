@@ -1,0 +1,20 @@
+css/parser/tests/important.css:2:12: error: expecting "!important"
+    1 | .test {
+    2 |     color: !asdf;
+      |            ~~~~~
+    3 |     background: !important;
+    4 |     border: black 1px !important solid;
+css/parser/tests/important.css:3:17: error: expecting a value before "!important"
+    1 | .test {
+    2 |     color: !asdf;
+    3 |     background: !important;
+      |                 ~~~~~~~~~~
+    4 |     border: black 1px !important solid;
+    5 |     padding: 10px !important;
+css/parser/tests/important.css:4:23: error: expecting ";": "!important" has to be the last identifier in a declaration
+    2 |     color: !asdf;
+    3 |     background: !important;
+    4 |     border: black 1px !important solid;
+      |                       ~~~~~~~~~~
+    5 |     padding: 10px !important;
+    6 | }

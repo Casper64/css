@@ -1,0 +1,3 @@
+css/parser/tests/attr_selector_strict.css:1:8: error: expected a string after "=" inside the attribute selector
+    1 | a[href=test] {}
+      |        ~~~~

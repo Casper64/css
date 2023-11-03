@@ -1,0 +1,16 @@
+css/parser/tests/layer.css:2:13: warning: expecting a comma separated list. Missing "," before "other"
+    1 | 
+    2 | @layer test other;
+      |             ~~~~~
+    3 | 
+    4 | @layer test, , other;
+css/parser/tests/layer.css:4:14: warning: expecting a name, ";" or "{" not ","
+    2 | @layer test other;
+    3 | 
+    4 | @layer test, , other;
+      |              ^
+    5 | 
+    6 | @layer test {
+css/parser/tests/layer.css:10:1: error: expecting "}". Did you forget to close the previous block?
+    8 |         color: green;
+    9 |     }

@@ -1,0 +1,21 @@
+css/parser/tests/declaration.css:3:5: error: unexpected token, expecting a property name or "}"
+    1 | 
+    2 | .test {
+    3 |     ;
+      |     ^
+    4 |     color green;
+    5 |     color: rgba 0 0 0);
+css/parser/tests/declaration.css:4:11: error: expecting ":" after a property name
+    2 | .test {
+    3 |     ;
+    4 |     color green;
+      |           ~~~~~
+    5 |     color: rgba 0 0 0);
+    6 | }
+css/parser/tests/declaration.css:5:22: error: unexpected ")" there is no matching opening parenthesis
+    3 |     ;
+    4 |     color green;
+    5 |     color: rgba 0 0 0);
+      |                      ^
+    6 | }
+    7 |

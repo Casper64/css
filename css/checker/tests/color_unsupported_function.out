@@ -1,0 +1,6 @@
+css/checker/tests/color_unsupported_function.css:2:12: error: unsupported function "bla" for property "color".
+Did you mean `rgb`, `rgba`, `hsl`?
+    1 | .other {
+    2 |     color: bla(255, 255, 255);
+      |            ~~~~~~~~~~~~~~~~~~
+    3 | }

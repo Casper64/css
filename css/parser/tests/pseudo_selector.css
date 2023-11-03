@@ -1,0 +1,16 @@
+
+a:not.test) {
+    color: red;
+}
+
+.test: {
+    color: white;
+}
+
+p:not(.test:has(.other)) {
+    color: blue;
+}
+
+.test:not(.test {
+    
+}

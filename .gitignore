@@ -1,0 +1,7 @@
+
+*.txt
+js/
+dist/
+
+# don't include top level V files
+/*.v

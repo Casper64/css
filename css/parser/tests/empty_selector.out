@@ -1,0 +1,5 @@
+css/parser/tests/empty_selector.css:1:1: error: expecting a css selector
+    1 | {
+      | ^
+    2 |     color: green;
+    3 | }

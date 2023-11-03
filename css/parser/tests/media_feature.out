@@ -1,0 +1,43 @@
+css/parser/tests/media_feature.css:1:20: error: unexpected token: expecting a term
+    1 | @media (min-width: ) {}
+      |                    ^
+    2 | 
+    3 | @media (min-width: 600px  400px) {}
+css/parser/tests/media_feature.css:3:27: error: unexpected token: expecting ")"
+    1 | @media (min-width: ) {}
+    2 | 
+    3 | @media (min-width: 600px  400px) {}
+      |                           ~~~
+    4 | 
+    5 | @media (min-width: df  hover) {}
+css/parser/tests/media_feature.css:3:32: error: unexpected token token rpar
+    1 | @media (min-width: ) {}
+    2 | 
+    3 | @media (min-width: 600px  400px) {}
+      |                                ^
+    4 | 
+    5 | @media (min-width: df  hover) {}
+css/parser/tests/media_feature.css:5:24: error: unexpected token: expecting ")"
+    3 | @media (min-width: 600px  400px) {}
+    4 | 
+    5 | @media (min-width: df  hover) {}
+      |                        ~~~~~
+    6 | 
+    7 | @media (min-width: df : hover) {}
+css/parser/tests/media_feature.css:5:29: error: unexpected token token rpar
+    3 | @media (min-width: 600px  400px) {}
+    4 | 
+    5 | @media (min-width: df  hover) {}
+      |                             ^
+    6 | 
+    7 | @media (min-width: df : hover) {}
+css/parser/tests/media_feature.css:7:23: error: unexpected token: expecting ")"
+    5 | @media (min-width: df  hover) {}
+    6 | 
+    7 | @media (min-width: df : hover) {}
+      |                       ^
+css/parser/tests/media_feature.css:7:30: error: unexpected token token rpar
+    5 | @media (min-width: df  hover) {}
+    6 | 
+    7 | @media (min-width: df : hover) {}
+      |                              ^

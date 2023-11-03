@@ -1,0 +1,7 @@
+a[] {}
+
+a[href^"test"] {}
+
+a[href=test] {}
+
+a[href="#test" {}

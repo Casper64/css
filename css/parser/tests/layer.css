@@ -1,0 +1,9 @@
+
+@layer test other;
+
+@layer test, , other;
+
+@layer test {
+    .test {
+        color: green;
+    }

@@ -1,0 +1,5 @@
+css/parser/tests/empty_at_rule.css:6:2: error: expecting a name after "@"
+    4 | }
+    5 | 
+    6 | @
+      |  ^

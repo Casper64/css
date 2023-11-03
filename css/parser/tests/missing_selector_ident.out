@@ -1,0 +1,19 @@
+css/parser/tests/missing_selector_ident.css:1:1: error: expecting an identifier after "."
+    1 | . {
+      | ~~~
+    2 |     color: red;
+    3 | }
+css/parser/tests/missing_selector_ident.css:5:1: error: expecting an identifier after "#" in a selector
+    3 | }
+    4 | 
+    5 | # {
+      | ~~~
+    6 |     color: white;
+    7 | }
+css/parser/tests/missing_selector_ident.css:9:6: error: expecting an identifier or ":" after ":" in a selector
+    7 | }
+    8 | 
+    9 | .test: {
+      |      ~~~
+   10 |     color: blue
+   11 | }

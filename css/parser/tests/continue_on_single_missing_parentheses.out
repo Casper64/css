@@ -1,0 +1,13 @@
+css/parser/tests/continue_on_single_missing_parentheses.css:2:38: error: unexpected ";" inside a function, expecting ")". Did you forget to close the parentheses?
+    1 | .test {
+    2 |     width: calc(100vw - (20px * 30px);
+      |                                      ^
+    3 |     color: rgba( 0 0 0;
+    4 |     width: calc(100vw - (20px * 30px));
+css/parser/tests/continue_on_single_missing_parentheses.css:3:23: error: unexpected ";" inside a function, expecting ")". Did you forget to close the parentheses?
+    1 | .test {
+    2 |     width: calc(100vw - (20px * 30px);
+    3 |     color: rgba( 0 0 0;
+      |                       ^
+    4 |     width: calc(100vw - (20px * 30px));
+    5 | }

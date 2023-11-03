@@ -1,0 +1,11 @@
+@media only, ,print, {}
+
+@media (max-width: 600px) {
+    .test {
+        color: green;
+    }
+
+.other {
+    color: red;
+}
+

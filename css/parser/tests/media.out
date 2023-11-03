@@ -1,0 +1,13 @@
+css/parser/tests/media.css:1:14: warning: expecting a media query or "{"
+    1 | @media only, ,print, {}
+      |              ^
+    2 | 
+    3 | @media (max-width: 600px) {
+css/parser/tests/media.css:1:20: warning: expecting a media query or "{"
+    1 | @media only, ,print, {}
+      |                    ^
+    2 | 
+    3 | @media (max-width: 600px) {
+css/parser/tests/media.css:12:1: error: expecting "}". Did you forget to close the previous block?
+   10 | }
+   11 |

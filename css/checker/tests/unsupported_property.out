@@ -1,0 +1,5 @@
+css/checker/tests/unsupported_property.css:2:5: error: unsupported property "invalid"! Check the "CAN_I_USE.md" to see a list of supported properties
+    1 | .test {
+    2 |     invalid: green;
+      |     ~~~~~~~~~~~~~~~
+    3 | }
