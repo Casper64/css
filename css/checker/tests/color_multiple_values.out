@@ -1,5 +1,0 @@
-css/checker/tests/color_multiple_values.css:2:12: error: property "color" only expects 1 value!
-    1 | .test {
-    2 |     color: green, red;
-      |            ~~~~~~~~~~~
-    3 | }

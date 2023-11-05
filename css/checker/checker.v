@@ -10,6 +10,15 @@ pub interface Validator {
 	validate_property(property string, raw_value ast.Value) !css.Value
 }
 
+// seperating the property validator from the checker means that the validator
+// can be extended by embedding it allowing custom properties and the ability
+// to override default behaviour of css values
+pub struct PropertyValidator {}
+
+pub fn (pv &PropertyValidator) unsupported_property(property string) !css.Value {
+	return error('unsupported property "${property}"! Check the "CAN_I_USE.md" for a list of supported properties')
+}
+
 pub fn validate(tree &ast.StyleSheet, mut table ast.Table, prefs &pref.Preferences) ![]css.Rule {
 	mut checker := &Checker{
 		file_path: tree.file_path

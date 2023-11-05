@@ -1,6 +1,11 @@
 
+.test#what {
+    opacity: 0.5;
+}
+
 #what {
     color: red;
+    opacity: 80%;
 }
 
 #id, .test {

@@ -1,0 +1,24 @@
+
+.margin {
+    margin: 10px 20px 30px 40px;
+    margin: 10px 20px;
+    margin: 100px;
+    margin: 10px 20px 30px;
+}
+
+.padding {
+    padding: 10px 20px 30px 40px;
+    padding: 10px 20px;
+    padding: 100px;
+    padding: 10px 20px 30px;
+}
+
+.unsupported {
+    padding-inline-start: 10px;
+    margin-block-end: 10%;
+}
+
+.too_many {
+    padding: 10px 20px 30px 40px 50px;
+    margin: 10px 20px 30px 40px 50px;
+}

@@ -32,14 +32,14 @@ pub enum GlobalValues {
 	unset
 }
 
-// TODO: support calc?
 pub struct Length {
 pub mut:
-	amount f32
+	amount f64
 	unit   Unit
 }
 
-pub type Percentage = f32
+// Percentage indicates a value between 0 and 100%, so 0.0 - 1.0
+pub type Percentage = f64
 
 // compatible with gx.Color
 pub struct Color {

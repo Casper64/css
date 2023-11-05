@@ -1,0 +1,41 @@
+css/checker/tests/fn_rgb.css:10:18: error: unexpected operator: expecting a number or alpha value
+    8 | 
+    9 | .unexpected_operator {
+   10 |     color: rgb(1 + 2, 3, 4);
+      |                  ^
+   11 | }
+   12 |
+css/checker/tests/fn_rgb.css:15:22: error: expecting an alpha value after "/"
+   13 | .alpha_test {
+   14 |     color: rgb(0 0 0 / 80%);
+   15 |     color: rgb(0 0 0 / );
+      |                      ^
+   16 |     color: rgb(0 0 0 / 80% 4);
+   17 |     color: rgb(0 0 0 / 20px);
+css/checker/tests/fn_rgb.css:16:28: error: unexpected ident: expecting the alpha value to be the last argument to `rgb(a)`
+   14 |     color: rgb(0 0 0 / 80%);
+   15 |     color: rgb(0 0 0 / );
+   16 |     color: rgb(0 0 0 / 80% 4);
+      |                            ^
+   17 |     color: rgb(0 0 0 / 20px);
+   18 | }
+css/checker/tests/fn_rgb.css:17:24: error: expecting a percentage value
+   15 |     color: rgb(0 0 0 / );
+   16 |     color: rgb(0 0 0 / 80% 4);
+   17 |     color: rgb(0 0 0 / 20px);
+      |                        ~~~~
+   18 | }
+   19 |
+css/checker/tests/fn_rgb.css:21:12: error: expecting 3 or 4 arguments for function `rgb(a)` not "5"
+   19 | 
+   20 | .wrong_nr_arguments{
+   21 |     color: rgb(0 0 0 0 0);
+      |            ~~~~~~~~~~~~~~
+   22 |     color: rgb(0 ,0);
+   23 | }
+css/checker/tests/fn_rgb.css:22:12: error: expecting 3 or 4 arguments for function `rgb(a)` not "2"
+   20 | .wrong_nr_arguments{
+   21 |     color: rgb(0 0 0 0 0);
+   22 |     color: rgb(0 ,0);
+      |            ~~~~~~~~~
+   23 | }

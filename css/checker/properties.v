@@ -11,7 +11,11 @@ pub fn (mut c Checker) validate_declarations(declarations []ast.Node) map[string
 	for decl in declarations {
 		match decl {
 			ast.Declaration {
-				if value := c.validator.validate_property(decl.property, decl.value) {
+				// remove browser prefix
+				prop_name := decl.property.replace('-webkit-', '').replace('-moz-', '')
+
+				if value := c.validator.validate_property(prop_name, decl.value) {
+					// use normal property name to include browser prefix
 					style_map[decl.property] = css.RawValue{
 						important: decl.important
 						value: value
@@ -36,27 +40,42 @@ pub fn (mut c Checker) validate_declarations(declarations []ast.Node) map[string
 	return style_map
 }
 
-// seperating the property validator from the checker means that the validator
-// can be extended by embedding it allowing custom properties and the ability
-// to override default behaviour of css values
-pub struct PropertyValidator {}
-
-pub fn (pv PropertyValidator) validate_property(property string, raw_value ast.Value) !css.Value {
+pub fn (pv &PropertyValidator) validate_property(property string, raw_value ast.Value) !css.Value {
+	// TODO: grouped properties e.g. `background: `
 	match property {
 		'color' {
-			return pv.validate_color(raw_value)!
+			return pv.validate_single_color_prop(property, raw_value)!
 		}
-		else {}
+		'width', 'height', 'top', 'left', 'bottom', 'right' {
+			return pv.validate_single_dimension_prop(property, raw_value)!
+		}
+		'opacity' {
+			return pv.validate_alpha_value_prop(property, raw_value)!
+		}
+		'padding', 'margin' {
+			return pv.validate_4_dim_value_prop(property, raw_value)!
+		}
+		else {
+			// handle properties with similair endings / starts
+
+			if property.ends_with('-color') {
+				// for properties like `background-color`, or `border-left-color`
+				return pv.validate_single_color_prop(property, raw_value)!
+			} else if property.starts_with('margin-') || property.starts_with('padding-') {
+				// for properties like `margin-left`, or `padding-top`
+				return pv.valditate_margin_padding(property, raw_value)!
+			}
+		}
 	}
 
-	return error('unsupported property "${property}"! Check the "CAN_I_USE.md" to see a list of supported properties')
+	return pv.unsupported_property(property)!
 }
 
-// `color: `
-pub fn (pv PropertyValidator) validate_color(raw_value ast.Value) !css.ColorValue {
+// any property that has only 1 color value like `color: `, or `background-color: `
+pub fn (pv &PropertyValidator) validate_single_color_prop(property_name string, raw_value ast.Value) !css.ColorValue {
 	if raw_value.children.len > 1 {
 		return ast.NodeError{
-			msg: 'property "color" only expects 1 value!'
+			msg: 'property "${property_name}" only expects 1 value!'
 			pos: raw_value.pos
 		}
 	}
@@ -76,88 +95,163 @@ pub fn (pv PropertyValidator) validate_color(raw_value ast.Value) !css.ColorValu
 				'rgb', 'rgba' {
 					pv.validate_fn_rgb(color_value)!
 				}
+				// TODO: var()
 				else {
 					ast.NodeError{
-						msg: 'unsupported function "${color_value.name}" for property "color".\n${errors.did_you_mean(valid_color_functions)}'
+						msg: 'unsupported function "${color_value.name}" for property "${property_name}".\n${errors.did_you_mean(valid_color_functions)}'
 						pos: color_value.pos
 					}
 				}
 			}
 		}
+		// TODO: keyword values: `inherit`
 		else {
 			return ast.NodeError{
-				msg: 'invalid value for property "color"!'
+				msg: 'invalid value for property "${property_name}"!'
 				pos: raw_value.pos
 			}
 		}
 	}
 }
 
-// `rgb()`, `rgba()`
-pub fn (pv PropertyValidator) validate_fn_rgb(func ast.Function) !datatypes.Color {
-	mut rgbas := []u8{}
-
-	for i, node in func.children {
-		match node {
-			ast.Operator {
-				// `/ 80%` alpha syntax
-				if node.kind == .div {
-					if i + 1 == func.children.len {
-						return ast.NodeError{
-							msg: 'expecting an alpha value after "/"'
-							pos: node.pos
-						}
-					} else if i + 2 != func.children.len {
-						return ast.NodeError{
-							msg: 'unexpected ident: expecting the alpha value to be the last argument to `rgb(a)`'
-							pos: func.children[i + 2].pos()
-						}
-					}
-
-					// check if next node is a percentage value
-					alpha := func.children[i + 1]
-					if alpha !is ast.Dimension || (alpha is ast.Dimension && alpha.unit != '%') {
-						return ast.NodeError{
-							msg: 'expecting a percantage value'
-							pos: alpha.pos()
-						}
-					}
-					// convert 80% to 0-255
-					rgbas << u8((alpha as ast.Dimension).value.f32() / 100 * 255)
-					break
-				} else if node.kind != .comma {
-					return ast.NodeError{
-						msg: 'unexpected operator: expecting a number or alpha value'
-						pos: node.pos
-					}
-				}
-			}
-			ast.Number {
-				rgbas << node.value.u8()
-			}
-			else {
-				return ast.NodeError{
-					msg: 'unexpected ident'
-					pos: node.pos()
-				}
-			}
-		}
-	}
-
-	// set alpha to 100% when only given `rgb`
-	if rgbas.len == 3 {
-		rgbas << 255
-	} else if rgbas.len != 4 {
+// any property that has only 1 dimension value, such as width and height
+pub fn (pv &PropertyValidator) validate_single_dimension_prop(prop_name string, raw_value ast.Value) !css.DimensionValue {
+	if raw_value.children.len > 1 {
 		return ast.NodeError{
-			msg: 'expecting 3 or 4 arguments to the `rgb(a)` function not "${rgbas.len}"'
-			pos: func.pos
+			msg: 'property "${prop_name}" only expects 1 value!'
+			pos: raw_value.pos
 		}
 	}
 
-	return datatypes.Color{
-		r: rgbas[0]
-		g: rgbas[1]
-		b: rgbas[2]
-		a: rgbas[3]
+	dimension_value := raw_value.children[0]
+	match dimension_value {
+		ast.Dimension {
+			unit := match dimension_value.unit {
+				'px' {
+					datatypes.Unit.px
+				}
+				'vw' {
+					datatypes.Unit.vw
+				}
+				'vh' {
+					datatypes.Unit.vh
+				}
+				'em' {
+					datatypes.Unit.em
+				}
+				'rem' {
+					datatypes.Unit.rem
+				}
+				'%' {
+					return datatypes.Percentage(dimension_value.value.f64() / 100)
+				}
+				else {
+					return ast.NodeError{
+						msg: 'unsupported unit "${dimension_value.unit}".\n${errors.did_you_mean(valid_units)}'
+						pos: dimension_value.pos
+					}
+				}
+			}
+
+			return datatypes.Length{
+				amount: dimension_value.value.f64()
+				unit: unit
+			}
+		}
+		ast.Number {
+			if dimension_value.value == '0' {
+				return css.Zero(0)
+			} else {
+				return ast.NodeError{
+					msg: 'invalid value for property "${prop_name}"!'
+					pos: raw_value.pos
+				}
+			}
+		}
+		// TODO: keyword values: `inherit`
+		// TODO: calc & var
+		else {
+			return ast.NodeError{
+				msg: 'invalid value for property "${prop_name}"!'
+				pos: raw_value.pos
+			}
+		}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_alpha_value_prop(prop_name string, raw_value ast.Value) !css.AlphaValue {
+	if raw_value.children.len > 1 {
+		return ast.NodeError{
+			msg: 'property "${prop_name}" only expects 1 value!'
+			pos: raw_value.pos
+		}
+	}
+
+	alpha_value := raw_value.children[0]
+	mut v := 0.0
+	match alpha_value {
+		ast.Number {
+			v = alpha_value.value.f64()
+		}
+		ast.Dimension {
+			if alpha_value.unit != '%' {
+				return ast.NodeError{
+					msg: 'expecting a percentage'
+					pos: alpha_value.pos
+				}
+			}
+
+			v = alpha_value.value.f64() / 100
+		}
+		// TODO: keyword values: `inherit`
+		else {
+			return ast.NodeError{
+				msg: 'invalid value for property "${prop_name}", expecting a number or a percentage'
+				pos: raw_value.pos
+			}
+		}
+	}
+
+	if v < 0 || v > 1 {
+		return ast.NodeError{
+			msg: 'Alpha value must be a percentage between 0-100% or between 0 and 1'
+			pos: raw_value.pos
+		}
+	}
+	return v
+}
+
+pub fn (pv &PropertyValidator) valditate_margin_padding(prop_name string, raw_value ast.Value) !css.Value {
+	if checker.four_dim_endings.any(|ending| prop_name.ends_with(ending)) {
+		return pv.validate_single_dimension_prop(prop_name, raw_value)!
+	}
+
+	return pv.unsupported_property(prop_name)!
+}
+
+pub fn (pv &PropertyValidator) validate_4_dim_value_prop(prop_name string, raw_value ast.Value) !css.MarginPadding {
+	if raw_value.children.len > 4 {
+		return ast.NodeError{
+			msg: 'property "${prop_name}" can have a maximum of 4 values'
+			pos: raw_value.children[4].pos()
+		}
+	}
+
+	mut vals := []css.DimensionValue{}
+	for value in raw_value.children {
+		vals << pv.validate_single_dimension_prop(prop_name, ast.Value{
+			pos: value.pos()
+			children: [value]
+		})!
+	}
+	
+	if vals.len == 1 {
+		return css.MarginPadding{vals[0], vals[0], vals[0], vals[0]}
+	} else if vals.len == 2 {
+		return css.MarginPadding{vals[0], vals[1], vals[0], vals[1]}
+	} else if vals.len == 3 {
+		return css.MarginPadding{vals[0], vals[1], vals[2], vals[1]}
+	} else {
+		return css.MarginPadding{vals[0], vals[1], vals[2], vals[3]}
 	}
 }

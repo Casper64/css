@@ -19,15 +19,15 @@ these rules. Since most of them require knowledge of the state of the DOM.
 
 | @-rule | Supported | Remarks |
 | --- | --- | --- |
-| @charset | Yes | Checker: `In Progress` |
+| @charset | Yes | checker: `In Progress` |
 | @color-profile | No | |
 | @container | No | |
 | @font-face | No | |
 | @container | No | |
 | @import | No | |
-| @keyframes | Yes | Checker: `In Progress` |
-| @layer | Yes | Checker: `In Progress` |
-| @media | Yes | Checker: `In Progress` |
+| @keyframes | Yes | checker: `In Progress` |
+| @layer | Yes | checker: `In Progress` |
+| @media | Yes | checker: `In Progress` |
 | @namespace | No | |
 | @page | No | |
 | @property | No | |
@@ -37,7 +37,17 @@ these rules. Since most of them require knowledge of the state of the DOM.
 
 | Property | Supported | Remarks |
 | --- | --- | --- |
+| border | No | only `-color` properties
+| bottom | Yes | |
 | color | Yes | |
+| height | Yes | |
+| left | Yes | |
+| margin | Yes | only `-top`, `-left`, `-right`, `-bottom` and `margin` |
+| opacity | Yes | |
+| padding | Yes |  only `-top`, `-left`, `-right`, `-bottom` and `padding` |
+| right | Yes | |
+| top | Yes | |
+| width | Yes | |
 
 ## Functions
 

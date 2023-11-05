@@ -52,6 +52,18 @@ pub fn prettify_file(src_file string, out_file string) ! {
 	os.write_file(out_file, minified)!
 }
 
+pub fn parse_stylesheet_from_text(src string, prefs &pref.Preferences) ![]css.Rule {
+	mut table := &ast.Table{}
+
+	mut p := parser.Parser.new(prefs)
+	p.table = table
+	tree := p.parse_text(src)
+
+	rules := checker.validate(tree, mut table, prefs)!
+
+	return rules
+}
+
 pub fn parse_stylesheet(css_file string, prefs &pref.Preferences) ![]css.Rule {
 	mut table := &ast.Table{}
 
@@ -59,9 +71,7 @@ pub fn parse_stylesheet(css_file string, prefs &pref.Preferences) ![]css.Rule {
 	p.table = table
 	tree := p.parse_file(css_file)
 
-	checker.validate(tree, mut table, prefs)!
-	table.sort_rules()
+	rules := checker.validate(tree, mut table, prefs)!
 
-	mut rules := []css.Rule{}
 	return rules
 }

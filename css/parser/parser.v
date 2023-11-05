@@ -11,28 +11,6 @@ const (
 	double_quote = '"'
 )
 
-// for testing purposes
-pub fn parse_text(raw_text string, prefs &pref.Preferences) &ast.StyleSheet {
-	mut p := &Parser{
-		prefs: prefs
-		table: &ast.Table{}
-	}
-	defer {
-		unsafe { p.free_lexer() }
-		unsafe { free(p.table) }
-	}
-
-	p.lexer = &lexer.Lexer{
-		prefs: prefs
-		all_tokens: []token.Token{cap: raw_text.len / 3}
-		text: raw_text
-	}
-	p.lexer.scan_remaining_text()
-	p.lexer.tidx = 0
-
-	return p.parse()
-}
-
 pub struct Parser {
 	prefs &pref.Preferences
 mut:
@@ -83,6 +61,23 @@ pub fn (mut p Parser) next() {
 	p.prev_tok = p.tok
 	p.tok = p.peek_tok
 	p.peek_tok = p.lexer.scan()
+}
+
+// for testing purposes
+pub fn (mut p Parser) parse_text(raw_text string) &ast.StyleSheet {
+	defer {
+		unsafe { p.free_lexer() }
+	}
+
+	p.lexer = &lexer.Lexer{
+		prefs: p.prefs
+		all_tokens: []token.Token{cap: raw_text.len / 3}
+		text: raw_text
+	}
+	p.lexer.scan_remaining_text()
+	p.lexer.tidx = 0
+
+	return p.parse()
 }
 
 pub fn (mut p Parser) parse_file(path string) &ast.StyleSheet {

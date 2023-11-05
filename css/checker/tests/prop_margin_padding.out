@@ -1,0 +1,27 @@
+css/checker/tests/prop_margin_padding.css:17:5: error: unsupported property "padding-inline-start"! Check the "CAN_I_USE.md" for a list of supported properties
+   15 | 
+   16 | .unsupported {
+   17 |     padding-inline-start: 10px;
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   18 |     margin-block-end: 10%;
+   19 | }
+css/checker/tests/prop_margin_padding.css:18:5: error: unsupported property "margin-block-end"! Check the "CAN_I_USE.md" for a list of supported properties
+   16 | .unsupported {
+   17 |     padding-inline-start: 10px;
+   18 |     margin-block-end: 10%;
+      |     ~~~~~~~~~~~~~~~~~~~~~~
+   19 | }
+   20 |
+css/checker/tests/prop_margin_padding.css:22:34: error: property "padding" can have a maximum of 4 values
+   20 | 
+   21 | .too_many {
+   22 |     padding: 10px 20px 30px 40px 50px;
+      |                                  ~~~~
+   23 |     margin: 10px 20px 30px 40px 50px;
+   24 | }
+css/checker/tests/prop_margin_padding.css:23:33: error: property "margin" can have a maximum of 4 values
+   21 | .too_many {
+   22 |     padding: 10px 20px 30px 40px 50px;
+   23 |     margin: 10px 20px 30px 40px 50px;
+      |                                 ~~~~
+   24 | }

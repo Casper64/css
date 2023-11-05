@@ -8,4 +8,9 @@ const (
 
 const (
 	valid_color_functions = ['rgb', 'rgba', 'hsl']
+	valid_units           = ['em', 'rem', 'px', 'vw', 'vh']
+)
+
+const (
+	four_dim_endings = ['-left', '-top', 'right', '-bottom']
 )

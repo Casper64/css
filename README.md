@@ -101,3 +101,34 @@ Run all tests with `v test .`
 ```bash
 v run css/parser/tests/test_program.v css/parser/tests/file.css
 ```
+
+## Property Types
+
+A list of properties and their types. Some property names start with `-`, this means
+that all css properties with this ending have the same type.
+
+For example the `-color` property has the type `css.ColorValue`, so the property `border-color`
+and `outline-color` both have the type `css.ColorValue`.
+
+| Property | Type(s) |
+| --- | --- |
+| background | `css.Background` |
+| bottom | `css.DimensionValue` |
+| color | `css.ColorValue` |
+| -color | `css.ColorValue` |
+| height | `css.DimensionValue `|
+| left | `css.DimensionValue `|
+| margin | `css.MarginPadding` |
+| margin-bottom | `css.DimensionValue `|
+| margin-left | `css.DimensionValue `|
+| margin-right | `css.DimensionValue `|
+| margin-top | `css.DimensionValue `|
+| opacity | `css.AlphaValue` |
+| padding | `css.MarginPadding` |
+| padding-bottom | `css.DimensionValue `|
+| padding-left | `css.DimensionValue `|
+| padding-right | `css.DimensionValue `|
+| padding-top | `css.DimensionValue `|
+| right | `css.DimensionValue `|
+| top | `css.DimensionValue `|
+| width | `css.DimensionValue `|

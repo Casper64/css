@@ -1,0 +1,12 @@
+
+.alpha {
+    opacity: 0.5;
+    opacity: 50%;
+}
+
+.invalid_alpha {
+    opacity: -2;
+    opacity: 2;
+    opacity: 110%;
+    opacity: -20%;
+}

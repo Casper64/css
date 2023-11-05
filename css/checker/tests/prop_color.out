@@ -1,0 +1,13 @@
+css/checker/tests/prop_color.css:2:12: error: property "color" only expects 1 value!
+    1 | .multiple_values {
+    2 |     color: green, red;
+      |            ~~~~~~~~~~~
+    3 | }
+    4 |
+css/checker/tests/prop_color.css:6:12: error: unsupported function "bla" for property "color".
+Did you mean `rgb`, `rgba`, `hsl`?
+    4 | 
+    5 | .unsupported_function {
+    6 |     color: bla(255, 255, 255);
+      |            ~~~~~~~~~~~~~~~~~~
+    7 | }

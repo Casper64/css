@@ -3,15 +3,23 @@ module css
 import css.ast
 import css.datatypes
 
+pub type ColorValue = datatypes.Color | datatypes.ColorKeywords | datatypes.GlobalValues | string
+// value between 0.0 and 1.0
+pub type AlphaValue = f64
+pub type Zero = int // e.g. top: 0;
 pub type DimensionValue = datatypes.CalcSum
 	| datatypes.DimensionKeywords
 	| datatypes.GlobalValues
 	| datatypes.Length
 	| datatypes.Percentage
+	| Zero
 
-pub type ColorValue = datatypes.Color | datatypes.ColorKeywords | datatypes.GlobalValues | string
-
-pub type Value = Background | Border | ColorValue | DimensionValue | Margin | Padding
+pub type Value = AlphaValue
+	| Background
+	| Border
+	| ColorValue
+	| DimensionValue
+	| MarginPadding
 
 pub struct Attribute {
 pub mut:
@@ -289,6 +297,9 @@ pub fn (r Rule) matches(selectors []Selector) bool {
 }
 
 pub fn (rules []Rule) get_styles() map[string]Value {
+	// TODO: merge grouped properties together e.g. `background` gets split
+	// into 'background-color', 'background-width' etc.
+	// OR combine them from `background-color` to `background` only
 	mut styles := map[string]Value{}
 	mut importants := map[string]bool{}
 

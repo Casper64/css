@@ -2,13 +2,6 @@ module css
 
 import css.datatypes
 
-// pub type Width = DimensionValue
-// pub type Height = DimensionValue
-// pub type Top = DimensionValue
-// pub type Right = DimensionValue
-// pub type Bottom = DimensionValue
-// pub type Left = DimensionValue
-
 // collection of properties listed here:
 // https://developer.mozilla.org/en-US/docs/Web/CSS/background
 pub struct Background {
@@ -25,19 +18,9 @@ pub mut:
 	width DimensionValue
 }
 
-// collection of properties listed here:
+// collection of properties for `margin` and `padding`:
 // https://developer.mozilla.org/en-US/docs/Web/CSS/margin
-pub struct Margin {
-pub mut:
-	top    DimensionValue
-	right  DimensionValue
-	bottom DimensionValue
-	left   DimensionValue
-}
-
-// collection of properties listed here:
-// https://developer.mozilla.org/en-US/docs/Web/CSS/padding
-pub struct Padding {
+pub struct MarginPadding {
 pub mut:
 	top    DimensionValue
 	right  DimensionValue

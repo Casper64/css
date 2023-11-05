@@ -1,0 +1,7 @@
+
+.border {
+    border-color: red;
+    border-top-color: green;
+    outline-color: yellow;
+    text-decoration-color: blue;
+}

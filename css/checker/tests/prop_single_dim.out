@@ -1,0 +1,22 @@
+css/checker/tests/prop_single_dim.css:12:12: error: unsupported unit "in".
+Did you mean `em`, `rem`, `px`, `vw`, `vh`?
+   10 | 
+   11 | .unsupported_unit {
+   12 |     width: 100in;
+      |            ~~~~~
+   13 | }
+   14 |
+css/checker/tests/prop_single_dim.css:16:12: error: property "width" only expects 1 value!
+   14 | 
+   15 | .multiple_vals {
+   16 |     width: 20px, 40px;
+      |            ~~~~~~~~~~~
+   17 |     width: 100vw 20vh;
+   18 | }
+css/checker/tests/prop_single_dim.css:17:12: error: property "width" only expects 1 value!
+   15 | .multiple_vals {
+   16 |     width: 20px, 40px;
+   17 |     width: 100vw 20vh;
+      |            ~~~~~~~~~~~
+   18 | }
+   19 |

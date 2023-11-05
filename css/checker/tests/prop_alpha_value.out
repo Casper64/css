@@ -1,0 +1,27 @@
+css/checker/tests/prop_alpha_value.css:8:14: error: Alpha value must be a percentage between 0-100% or between 0 and 1
+    6 | 
+    7 | .invalid_alpha {
+    8 |     opacity: -2;
+      |              ~~~
+    9 |     opacity: 2;
+   10 |     opacity: 110%;
+css/checker/tests/prop_alpha_value.css:9:14: error: Alpha value must be a percentage between 0-100% or between 0 and 1
+    7 | .invalid_alpha {
+    8 |     opacity: -2;
+    9 |     opacity: 2;
+      |              ~~
+   10 |     opacity: 110%;
+   11 |     opacity: -20%;
+css/checker/tests/prop_alpha_value.css:10:14: error: Alpha value must be a percentage between 0-100% or between 0 and 1
+    8 |     opacity: -2;
+    9 |     opacity: 2;
+   10 |     opacity: 110%;
+      |              ~~~~~
+   11 |     opacity: -20%;
+   12 | }
+css/checker/tests/prop_alpha_value.css:11:14: error: Alpha value must be a percentage between 0-100% or between 0 and 1
+    9 |     opacity: 2;
+   10 |     opacity: 110%;
+   11 |     opacity: -20%;
+      |              ~~~~~
+   12 | }

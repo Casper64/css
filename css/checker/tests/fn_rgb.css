@@ -1,0 +1,23 @@
+
+.optional_comma {
+    color: rgb(1 1 1);
+    color: rgb(1, 1, 1);
+    color: rgba(1 1 1 1);
+    color: rgba(1, 1, 1, 1);
+}
+
+.unexpected_operator {
+    color: rgb(1 + 2, 3, 4);
+}
+
+.alpha_test {
+    color: rgb(0 0 0 / 80%);
+    color: rgb(0 0 0 / );
+    color: rgb(0 0 0 / 80% 4);
+    color: rgb(0 0 0 / 20px);
+}
+
+.wrong_nr_arguments{
+    color: rgb(0 0 0 0 0);
+    color: rgb(0 ,0);
+}
