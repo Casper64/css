@@ -1,0 +1,5 @@
+css/parser/tests/empty_declaration.css:2:12: error: property value expected
+    1 | .empty {
+    2 |     color: ;
+      |            ^
+    3 | }

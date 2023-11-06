@@ -7,7 +7,7 @@ const (
 	preferences = &pref.Preferences{}
 )
 
-// -webkit- and -moz- should end up in the styles map, 
+// -webkit- and -moz- should end up in the styles map,
 // but be parsed as if the browser prefix isn't present.
 
 fn test_webkit() {

@@ -12,26 +12,6 @@ pub enum Unit {
 	px
 }
 
-pub enum DimensionKeywords {
-	auto
-	max_content
-	min_content
-	fit_content
-}
-
-pub enum ColorKeywords {
-	currentcolor
-	transparent
-}
-
-pub enum GlobalValues {
-	inherit
-	initial
-	revert
-	rever_layer
-	unset
-}
-
 pub struct Length {
 pub mut:
 	amount f64

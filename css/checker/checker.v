@@ -15,8 +15,8 @@ pub interface Validator {
 // to override default behaviour of css values
 pub struct PropertyValidator {}
 
-pub fn (pv &PropertyValidator) unsupported_property(property string) !css.Value {
-	return error('unsupported property "${property}"! Check the "CAN_I_USE.md" for a list of supported properties')
+pub fn (pv &PropertyValidator) unsupported_property(property string) string {
+	return 'unsupported property "${property}"! Check the "CAN_I_USE.md" for a list of supported properties'
 }
 
 pub fn validate(tree &ast.StyleSheet, mut table ast.Table, prefs &pref.Preferences) ![]css.Rule {

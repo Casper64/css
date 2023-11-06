@@ -174,6 +174,9 @@ pub fn (mut p Parser) parse_value_children() ![]ast.Node {
 				if p.prefs.is_strict {
 					return p.error('expecting ";"')
 				}
+				if children.len == 0 {
+					return p.error('property value expected')
+				}
 				return children
 			}
 			.lpar {
@@ -183,9 +186,15 @@ pub fn (mut p Parser) parse_value_children() ![]ast.Node {
 				if p.parentheses_depth <= 0 {
 					return p.error('unexpected ")" there is no matching opening parenthesis')
 				}
+				if children.len == 0 {
+					return p.error('property value expected')
+				}
 				return children
 			}
 			.semicolon {
+				if children.len == 0 {
+					return p.error('property value expected')
+				}
 				if p.parentheses_depth > 0 {
 					// :not(.test  { color: green; }
 					//           ^

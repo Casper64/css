@@ -3,23 +3,26 @@ module css
 import css.ast
 import css.datatypes
 
-pub type ColorValue = datatypes.Color | datatypes.ColorKeywords | datatypes.GlobalValues | string
+pub type ColorValue = datatypes.Color | string
+
 // value between 0.0 and 1.0
-pub type AlphaValue = f64
-pub type Zero = int // e.g. top: 0;
-pub type DimensionValue = datatypes.CalcSum
-	| datatypes.DimensionKeywords
-	| datatypes.GlobalValues
+pub type AlphaValue = Keyword | f64
+pub type DimensionValue = Keyword
+	| datatypes.CalcSum
 	| datatypes.Length
 	| datatypes.Percentage
-	| Zero
+	| f64
+
+pub type Keyword = string
 
 pub type Value = AlphaValue
 	| Background
 	| Border
 	| ColorValue
 	| DimensionValue
+	| Keyword
 	| MarginPadding
+	| string
 
 pub struct Attribute {
 pub mut:

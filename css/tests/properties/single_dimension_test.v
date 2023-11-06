@@ -33,7 +33,7 @@ fn test_zero() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'width': css.Value(css.DimensionValue(css.Zero(0)))
-		'top': css.Value(css.DimensionValue(css.Zero(0)))
+		'width': css.Value(css.DimensionValue(0.0))
+		'top':   css.Value(css.DimensionValue(0.0))
 	}
 }

@@ -1,5 +1,4 @@
 import css
-import css.datatypes
 import css.pref
 import css.util as css_util
 

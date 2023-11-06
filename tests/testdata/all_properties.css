@@ -1,0 +1,198 @@
+/* The goal is to support at least all the properties below */
+
+.property-list {
+    align-content: center;
+    align-items: center;
+    align-self: center;
+    all: initial;
+    /* animation: 1s ease-in forwards infinite;
+    animation-delay: .2s;
+    animation-direction: reverse;
+    animation-duration: 100ms;
+    animation-fill-mode: none;
+    animation-iteration-count: inherit;
+    animation-name: bounce;
+    animation-play-state: running;
+    animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); */
+    backface-visibility: hidden; 
+    background: linear-gradient(to left, #ffffff, black);
+    /* background-attachment: fixed;
+    background-blend-mode: multiply;
+    background-clip: content-box; */
+    background-color: green;
+    background-image: url('test.png');
+    /* background-origin: padding-box; */
+    background-position: 50% 50% ;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 1px solid black;
+    /* border-bottom: 1px solid black ;
+    border-bottom-color: red;
+    border-bottom-style: dotted;
+    border-bottom-width: 2px; */
+    border-collapse: collapse;
+    border-color: green;
+    /* border-image: url('test.png');
+    border-image-outset: ;
+    border-image-repeat: ;
+    border-image-slice: ;
+    border-image-source: ;
+    border-image-width: ;
+    border-left: ;
+    border-left-color: ;
+    border-left-style: ;
+    border-left-width: ;
+    border-radius: ;
+    border-right: ;
+    border-right-color: ;
+    border-right-style: ;
+    border-right-width: ;
+    border-spacing: ;
+    border-style: ;
+    border-top: ;
+    border-top-color: ;
+    border-top-left: ;
+    border-top-right: ;
+    border-top-style: ;
+    border-top-width: ; */
+    border-width: 5px;
+    bottom: 20%;
+    box-shadow: 4px 2px 2px rgb(0 0 0 / 12%);
+    box-sizing: border-box;
+    /* caption-side: ;
+    caret-color: ;
+    clear: ;
+    clip: ;
+    clip-path: ; */
+    color: black;
+    /* column-count: ;
+    column-fill: ;
+    column-gap: ;
+    column-rule: ;
+    column-rule-color: ;
+    column-rule-style: ;
+    column-rule-width: ;
+    column-span: ;
+    column-width: ;
+    columns: ; */
+    content: "test";
+    /* counter-increment: ;
+    counter-reset: ; */
+    cursor: pointer;
+    direction: ltr;
+    display: block;
+    /* empty-cells: ; */
+    filter: blur(2px);
+    flex: content;
+    flex-basis: 20px;
+    flex-direction: column;
+    flex-flow: row;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    float: right;
+    /* font: ; */
+    font-family: 'Courier New', Courier, monospace;
+    /* font-kerning: ; */
+    font-size: 16px;
+    /* font-size-adjust: ;
+    font-stretch: ; */
+    font-style: italic;
+    /* font-variant: ; */
+    font-weight: bold;
+    /* grid: ;
+    grid-area: ; */
+    grid-auto-columns: 10px;
+    grid-auto-flow: dense;
+    grid-auto-rows: 20px;
+    grid-column: 1 / 3;
+    grid-column-end: 3;
+    grid-column-gap: 40px;
+    grid-column-start: 1;
+    grid-gap: 2em;
+    grid-row: 2 / 4;
+    grid-row-end: 4;
+    grid-row-gap: 50px;
+    grid-row-start: 2;
+    /* grid-template: ;
+    grid-template-areas: ; */
+    grid-template-columns: 100px 100px;
+    grid-template-rows: repeat(auto-fit, 20px);
+    height: 100vh;
+    /* hyphens: ; */
+    justify-content: center;
+    left: -20px;
+    letter-spacing: 1.5;
+    line-height: 1.5;
+    /* list-style: ;
+    list-style-image: ;
+    list-style-position: ; */
+    list-style-type: circle;
+    margin: 10px 20px 30px 40px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 30px;
+    margin-top: 40px;
+    max-height: 200rem;
+    max-width: 20vw;
+    min-height: 40vh;
+    min-width: 69%;
+    /* object-fit: ;
+    object-position: ; */
+    opacity: 0.9;
+    /* order: ; */
+    outline: red 1px dotted;
+    outline-color: invert;
+    outline-offset: 1px;
+    outline-style: solid;
+    outline-width: 20%;
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 10px 20px 30px 40px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 30px;
+    padding-top: 40px;
+    /* page-break-after: ;
+    page-break-before: ;
+    page-break-inside: ;
+    perspective: ;
+    perspective-origin: ; */
+    pointer-events: none;
+    position: absolute;
+    /* quotes: ; */
+    right: 20px;
+    scroll-behavior: smooth;
+    /* table-layout: ; */
+    text-align: right;
+    /* text-align-last: ; */
+    text-decoration: blue underline wavy;
+    text-decoration-color: blue;
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    /* text-indent: ;
+    text-justify: ;
+    text-overflow: ;
+    text-shadow: ;
+    text-transform: ; */
+    top: 1px;
+    /* transform: ;
+    transform-origin: ;
+    transform-style: ;
+    transition: ;
+    transition-delay: ;
+    transition-duration: ;
+    transition-property: ;
+    transition-timing-function: ; */
+    user-select: none;
+    /* vertical-align: ; */
+    visibility: hidden;
+    /* white-space: ; */
+    width: 100vw;
+    word-break: break-all;
+    /* word-spacing: ; */
+    word-wrap: break-word;
+    writing-mode: vertical-rl;
+    z-index: 4;
+}

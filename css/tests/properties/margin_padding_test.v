@@ -8,7 +8,8 @@ const (
 )
 
 fn test_single_dimensions() {
-	rules := css_util.parse_stylesheet_from_text('.t { padding-left: 100vw; margin-right: 20% }', preferences)!
+	rules := css_util.parse_stylesheet_from_text('.t { padding-left: 100vw; margin-right: 20% }',
+		preferences)!
 	styles := rules.get_styles()
 
 	assert styles == {
@@ -21,7 +22,8 @@ fn test_single_dimensions() {
 }
 
 fn test_grouped_4() {
-	rules := css_util.parse_stylesheet_from_text('.t { padding: 10px 20px 30px 40px; }', preferences)!
+	rules := css_util.parse_stylesheet_from_text('.t { padding: 10px 20px 30px 40px; }',
+		preferences)!
 	styles := rules.get_styles()
 
 	assert styles == {

@@ -22,7 +22,8 @@ fn test_rgb() {
 }
 
 fn test_rgba() {
-	rules := css_util.parse_stylesheet_from_text('.t { color: rgb(10 20 30 / 20%); }', preferences)!
+	rules := css_util.parse_stylesheet_from_text('.t { color: rgb(10 20 30 / 20%); }',
+		preferences)!
 	styles := rules.get_styles()
 
 	assert styles == {
