@@ -13,14 +13,16 @@ fn test_gradient_simple() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'background-image': css.Image(css.Gradient{
-			kind: .linear
-			gradient_values: [css.GradientValue{
-				color: 'red'
-			}, css.GradientValue{
-				color: 'green'
-			}]
-		})
+		'background': css.Background{
+			image: css.Gradient{
+				kind: .linear
+				gradient_values: [css.GradientValue{
+					color: 'red'
+				}, css.GradientValue{
+					color: 'green'
+				}]
+			}
+		}
 	}
 }
 
@@ -30,15 +32,17 @@ fn test_gradient_directions() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'background-image': css.Image(css.Gradient{
-			kind: .linear
-			directions: .right | .bottom
-			gradient_values: [css.GradientValue{
-				color: 'red'
-			}, css.GradientValue{
-				color: 'green'
-			}]
-		})
+		'background': css.Background{
+			image: css.Gradient{
+				kind: .linear
+				directions: .right | .bottom
+				gradient_values: [css.GradientValue{
+					color: 'red'
+				}, css.GradientValue{
+					color: 'green'
+				}]
+			}
+		}
 	}
 }
 
@@ -48,21 +52,23 @@ fn test_gradient_dimensions() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'background-image': css.Image(css.Gradient{
-			kind: .radial
-			gradient_values: [
-				css.GradientValue{
-					color: 'red'
-					size: datatypes.Length{
-						amount: 10
-						unit: .px
-					}
-				},
-				css.GradientValue{
-					color: 'green'
-					size: datatypes.Percentage(0.6)
-				},
-			]
-		})
+		'background': css.Background{
+			image: css.Gradient{
+				kind: .radial
+				gradient_values: [
+					css.GradientValue{
+						color: 'red'
+						size: datatypes.Length{
+							amount: 10
+							unit: .px
+						}
+					},
+					css.GradientValue{
+						color: 'green'
+						size: datatypes.Percentage(0.6)
+					},
+				]
+			}
+		}
 	}
 }

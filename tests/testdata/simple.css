@@ -1,7 +1,7 @@
 
 .test, .other[href] {
     color: green;
-    width: calc(100vw - (20px * 30px));
+    /* width: calc(100vw - (20px * 30px)); */
 }
 
 .empty {}
@@ -9,7 +9,7 @@
 
 #id.mine, .test:not(#iaad.dsds) {
     background-color: green;
-    border: 1px solid rgba(255 0 255 100);
+    /* border: 1px solid rgba(255 0 255 100); */
     width: 100vw !important;
 }
 

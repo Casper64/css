@@ -13,11 +13,15 @@ fn test_single_dimensions() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'padding-left': css.Value(css.DimensionValue(datatypes.Length{
-			amount: 100
-			unit: .vw
-		}))
-		'margin-right': css.Value(css.DimensionValue(datatypes.Percentage(0.2)))
+		'padding': css.MarginPadding{
+			left: datatypes.Length{
+				amount: 100
+				unit: .vw
+			}
+		}
+		'margin':  css.MarginPadding{
+			right: datatypes.Percentage(0.2)
+		}
 	}
 }
 

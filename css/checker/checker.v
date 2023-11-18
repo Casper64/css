@@ -8,7 +8,8 @@ import css.token
 
 // Validator is an interface which you can extend to check any custom properties
 pub interface Validator {
-	validate_property(property string, raw_value ast.Value) !css.Value
+	validate_property(string, ast.Value) !css.Value
+	set_grouped(prop_name string, value css.Value, mut style_map map[string]css.RawValue) bool
 }
 
 // seperating the property validator from the checker means that the validator
