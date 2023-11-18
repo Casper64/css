@@ -1,0 +1,100 @@
+css/checker/tests/fn_gradient.css:3:23: error: expecting a gradient function not "unkown-gradient"
+Did you mean `linear-gradient`, `radial-gradient`, `repeating-linear-gradient`, `repeating-radial-gradient`?
+    1 | 
+    2 | .unkown_gradient {
+    3 |     background-image: unkown-gradient(to right, red, green);
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    4 | }
+    5 |
+css/checker/tests/fn_gradient.css:7:48: error: unexpected ident "to": only the first gradient value can be a direction
+    5 | 
+    6 | .direction_must_be_first_argument {
+    7 |     background-image: linear-gradient(#ff0000, to left);
+      |                                                ~~
+    8 |     background-image: linear-gradient(red, bottom);
+    9 | }
+css/checker/tests/fn_gradient.css:7:23: error: expecting at least 2 color values in a gradient function
+    5 | 
+    6 | .direction_must_be_first_argument {
+    7 |     background-image: linear-gradient(#ff0000, to left);
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    8 |     background-image: linear-gradient(red, bottom);
+    9 | }
+css/checker/tests/fn_gradient.css:8:44: error: unexpected ident "bottom": only the first gradient value can be a direction
+    6 | .direction_must_be_first_argument {
+    7 |     background-image: linear-gradient(#ff0000, to left);
+    8 |     background-image: linear-gradient(red, bottom);
+      |                                            ~~~~~~
+    9 | }
+   10 |
+css/checker/tests/fn_gradient.css:8:23: error: expecting at least 2 color values in a gradient function
+    6 | .direction_must_be_first_argument {
+    7 |     background-image: linear-gradient(#ff0000, to left);
+    8 |     background-image: linear-gradient(red, bottom);
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    9 | }
+   10 |
+css/checker/tests/fn_gradient.css:12:41: error: expecting a direction after "to".
+Did you mean `left`, `top`, `right`, `bottom`?
+   10 | 
+   11 | .double_or_missing_values {
+   12 |     background-image: linear-gradient(to, #aaa, #aaa);
+      |                                         ^
+   13 |     background-image: linear-gradient(to to right, #aaa, #aaa);
+   14 |     background-image: linear-gradient(red green);
+css/checker/tests/fn_gradient.css:13:42: error: expecting a direction after "to".
+Did you mean `left`, `top`, `right`, `bottom`?
+   11 | .double_or_missing_values {
+   12 |     background-image: linear-gradient(to, #aaa, #aaa);
+   13 |     background-image: linear-gradient(to to right, #aaa, #aaa);
+      |                                          ~~
+   14 |     background-image: linear-gradient(red green);
+   15 |     background-image: linear-gradient(#aaa #bbb);
+css/checker/tests/fn_gradient.css:14:43: error: you can only have 1 color per gradient value
+   12 |     background-image: linear-gradient(to, #aaa, #aaa);
+   13 |     background-image: linear-gradient(to to right, #aaa, #aaa);
+   14 |     background-image: linear-gradient(red green);
+      |                                           ~~~~~
+   15 |     background-image: linear-gradient(#aaa #bbb);
+   16 |     background-image: linear-gradient(red 10px 20px, green);
+css/checker/tests/fn_gradient.css:14:23: error: expecting at least 2 color values in a gradient function
+   12 |     background-image: linear-gradient(to, #aaa, #aaa);
+   13 |     background-image: linear-gradient(to to right, #aaa, #aaa);
+   14 |     background-image: linear-gradient(red green);
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+   15 |     background-image: linear-gradient(#aaa #bbb);
+   16 |     background-image: linear-gradient(red 10px 20px, green);
+css/checker/tests/fn_gradient.css:15:44: error: you can only have 1 color per gradient value
+   13 |     background-image: linear-gradient(to to right, #aaa, #aaa);
+   14 |     background-image: linear-gradient(red green);
+   15 |     background-image: linear-gradient(#aaa #bbb);
+      |                                            ~~~~
+   16 |     background-image: linear-gradient(red 10px 20px, green);
+   17 |     background-image: linear-gradient(10px, red, green);
+css/checker/tests/fn_gradient.css:15:23: error: expecting at least 2 color values in a gradient function
+   13 |     background-image: linear-gradient(to to right, #aaa, #aaa);
+   14 |     background-image: linear-gradient(red green);
+   15 |     background-image: linear-gradient(#aaa #bbb);
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+   16 |     background-image: linear-gradient(red 10px 20px, green);
+   17 |     background-image: linear-gradient(10px, red, green);
+css/checker/tests/fn_gradient.css:16:48: error: you can only have 1 dimension per gradient value
+   14 |     background-image: linear-gradient(red green);
+   15 |     background-image: linear-gradient(#aaa #bbb);
+   16 |     background-image: linear-gradient(red 10px 20px, green);
+      |                                                ~~~~
+   17 |     background-image: linear-gradient(10px, red, green);
+   18 | }
+css/checker/tests/fn_gradient.css:17:39: error: expecting a color before a dimension value
+   15 |     background-image: linear-gradient(#aaa #bbb);
+   16 |     background-image: linear-gradient(red 10px 20px, green);
+   17 |     background-image: linear-gradient(10px, red, green);
+      |                                       ~~~~
+   18 | }
+   19 |
+css/checker/tests/fn_gradient.css:21:23: error: expecting at least 2 color values in a gradient function
+   19 | 
+   20 | .minimal_2_colors {
+   21 |     background-image: linear-gradient(to right, green);
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   22 | }

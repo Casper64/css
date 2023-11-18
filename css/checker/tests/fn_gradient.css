@@ -1,0 +1,22 @@
+
+.unkown_gradient {
+    background-image: unkown-gradient(to right, red, green);
+}
+
+.direction_must_be_first_argument {
+    background-image: linear-gradient(#ff0000, to left);
+    background-image: linear-gradient(red, bottom);
+}
+
+.double_or_missing_values {
+    background-image: linear-gradient(to, #aaa, #aaa);
+    background-image: linear-gradient(to to right, #aaa, #aaa);
+    background-image: linear-gradient(red green);
+    background-image: linear-gradient(#aaa #bbb);
+    background-image: linear-gradient(red 10px 20px, green);
+    background-image: linear-gradient(10px, red, green);
+}
+
+.minimal_2_colors {
+    background-image: linear-gradient(to right, green);
+}

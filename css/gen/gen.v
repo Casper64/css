@@ -4,7 +4,7 @@ import css.ast
 import css.pref
 import strings
 
-[params]
+@[params]
 pub struct GenOptions {
 	minify bool
 }

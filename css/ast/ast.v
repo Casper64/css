@@ -8,7 +8,7 @@ import css.token
 pub struct Empty {}
 
 // a css file
-[heap]
+@[heap]
 pub struct StyleSheet {
 pub:
 	file_path string

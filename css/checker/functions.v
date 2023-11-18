@@ -3,6 +3,7 @@ module checker
 import css
 import css.ast
 import css.datatypes
+import css.errors
 
 // `rgb()`, `rgba()`
 pub fn (pv &PropertyValidator) validate_fn_rgb(func ast.Function) !datatypes.Color {
@@ -72,4 +73,201 @@ pub fn (pv &PropertyValidator) validate_fn_rgb(func ast.Function) !datatypes.Col
 		b: rgbas[2]
 		a: rgbas[3]
 	}
+}
+
+@[direct_array_access]
+pub fn (pv &PropertyValidator) validate_fn_gradients(prop_name string, gradient_name string, raw_value ast.Function) !css.Gradient {
+	if raw_value.children.len < 2 {
+		return ast.NodeError{
+			msg: 'the function "${gradient_name}" expects at least 2 arguments'
+			pos: raw_value.pos
+		}
+	}
+
+	mut gradient := css.Gradient{}
+	gradient.kind = match gradient_name {
+		'linear-gradient' {
+			.linear
+		}
+		'radial-gradient' {
+			.radial
+		}
+		'repeating-linear-gradient' {
+			.repeating_linear
+		}
+		'repeating-radial-gradient' {
+			.repeating_radial
+		}
+		else {
+			return ast.NodeError{
+				msg: 'expecting a gradient function not "${gradient_name}"\n${errors.did_you_mean(valid_gradient_functions)}'
+				pos: raw_value.pos
+			}
+		}
+	}
+
+	mut color_count := 0
+	for i := 0; i < raw_value.children.len; {
+		mut errored := false
+		mut is_direction := false
+
+		mut gradient_color := ?css.ColorValue(none)
+		mut gradient_size := ?css.DimensionValue(none)
+
+		mut j := i
+		// this inner loop processes children until a "," is reached
+		for j < raw_value.children.len {
+			child := raw_value.children[j]
+			j++
+
+			if child is ast.Operator && child.kind == .comma {
+				break
+			}
+
+			// skip until the next comma if an error has occured
+			if errored {
+				continue
+			}
+
+			match child {
+				ast.Ident {
+					if child.name == 'to' {
+						if gradient.gradient_values.len > 0 {
+							// gradient(red, to left, green)
+							pv.error_with_pos('unexpected ident "to": only the first gradient value can be a direction',
+								child.pos)
+							errored = true
+							continue
+						} else if is_direction {
+							// gradient(to to)
+							pv.error_with_pos('expecting a direction after "to".\n${errors.did_you_mean(gradient_directions)}',
+								child.pos)
+							errored = true
+							continue
+						} else {
+							is_direction = true
+						}
+					} else if child.name in gradient_directions {
+						if gradient.gradient_values.len > 0 {
+							// gradient(red, to left, green)
+							pv.error_with_pos('unexpected ident "${child.name}": only the first gradient value can be a direction',
+								child.pos)
+							errored = true
+							continue
+						} else if !is_direction {
+							// gradient(right, )
+							pv.error_with_pos('expecting the keyword "to" before a direction.',
+								child.pos)
+							errored = true
+						} else {
+							match child.name {
+								'top' { gradient.directions.set(.top) }
+								'left' { gradient.directions.set(.left) }
+								'right' { gradient.directions.set(.right) }
+								'bottom' { gradient.directions.set(.bottom) }
+								else {}
+							}
+						}
+					} else {
+						// gradient(red green)
+						if gradient_color != none {
+							pv.error_with_pos('you can only have 1 color per gradient value',
+								child.pos)
+							errored = true
+							continue
+						} else {
+							gradient_color = pv.validate_single_color_prop(gradient_name,
+								ast.Value{
+								pos: child.pos
+								children: [child]
+							}) or {
+								if err is ast.NodeError {
+									pv.error_with_pos(err.msg(), err.pos)
+								}
+								errored = true
+								continue
+							}
+							color_count++
+						}
+					}
+				}
+				ast.Hash {
+					// gradient(#aaa #bbb)
+					if gradient_color != none {
+						pv.error_with_pos('you can only have 1 color per gradient value',
+							child.pos)
+						errored = true
+						continue
+					} else {
+						gradient_color = pv.validate_single_color_prop(gradient_name,
+							ast.Value{
+							pos: child.pos
+							children: [child]
+						}) or {
+							if err is ast.NodeError {
+								pv.error_with_pos(err.msg(), err.pos)
+							}
+							errored = true
+							continue
+						}
+						color_count++
+					}
+				}
+				ast.Dimension {
+					// gradient(5px 4px)
+					if gradient_size != none {
+						pv.error_with_pos('you can only have 1 dimension per gradient value',
+							child.pos)
+						errored = true
+						continue
+					} else if gradient_color == none {
+						// gradient(10px red)
+						pv.error_with_pos('expecting a color before a dimension value',
+							child.pos)
+						errored = true
+						continue
+					} else {
+						gradient_size = pv.validate_single_dimension_prop(gradient_name,
+							ast.Value{
+							pos: child.pos
+							children: [child]
+						}) or {
+							if err is ast.NodeError {
+								pv.error_with_pos(err.msg(), err.pos)
+							}
+							errored = true
+							continue
+						}
+					}
+				}
+				else {}
+			}
+		}
+		i = j
+
+		if !errored {
+			// gradient(to, )
+			if is_direction && int(gradient.directions) == 0 {
+				pv.error_with_pos('expecting a direction after "to".\n${errors.did_you_mean(gradient_directions)}',
+					raw_value.children[i - 1].pos())
+				continue
+			}
+
+			if color := gradient_color {
+				gradient.gradient_values << css.GradientValue{
+					color: color
+					size: gradient_size
+				}
+			}
+		}
+	}
+
+	if color_count < 2 {
+		return ast.NodeError{
+			msg: 'expecting at least 2 color values in a gradient function'
+			pos: raw_value.pos
+		}
+	}
+
+	return gradient
 }

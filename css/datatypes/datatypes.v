@@ -90,3 +90,18 @@ pub enum LineStyle {
 	inset
 	outset
 }
+
+pub enum GradientKind {
+	linear
+	radial
+	repeating_linear
+	repeating_radial
+}
+
+@[flag]
+pub enum GradientDirection {
+	top
+	right
+	left
+	bottom
+}

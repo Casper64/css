@@ -14,7 +14,7 @@ const (
 	error_context_after  = 2
 )
 
-[params]
+@[params]
 pub struct CompilerMessage {
 	msg       string
 	details   string

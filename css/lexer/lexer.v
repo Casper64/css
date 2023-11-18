@@ -423,7 +423,7 @@ pub fn (mut l Lexer) scan_remaining_text() {
 	}
 }
 
-[direct_array_access]
+@[direct_array_access]
 pub fn (mut l Lexer) scan() token.Token {
 	for {
 		cidx := l.tidx

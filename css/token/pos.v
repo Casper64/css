@@ -16,7 +16,7 @@ pub fn (p &Pos) str() string {
 	return '${p.line_nr + 1}:${p.col + 1}, len: ${p.len}'
 }
 
-[unsafe]
+@[unsafe]
 pub fn (mut p Pos) free() {
 }
 
@@ -46,7 +46,7 @@ pub fn (mut pos Pos) update_last_line(last_line int) {
 	pos.last_line = last_line - 1
 }
 
-[inline]
+@[inline]
 pub fn (tok &Token) pos() Pos {
 	return Pos{
 		len: tok.len

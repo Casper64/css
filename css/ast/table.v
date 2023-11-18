@@ -7,7 +7,7 @@ pub:
 	declarations []Node
 }
 
-[heap; minify]
+@[heap; minify]
 pub struct Table {
 pub mut:
 	// front = least specific, back = most specific

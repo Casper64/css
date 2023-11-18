@@ -15,11 +15,15 @@ pub type DimensionValue = Keyword
 
 pub type Keyword = string
 
+pub type Image = Gradient | Keyword | datatypes.Url
+
 pub type Value = AlphaValue
 	| Background
 	| Border
 	| ColorValue
 	| DimensionValue
+	| Gradient
+	| Image
 	| Keyword
 	| MarginPadding
 	| string
@@ -294,7 +298,7 @@ pub mut:
 	declarations map[string]RawValue
 }
 
-[inline]
+@[inline]
 pub fn (r Rule) matches(selectors []Selector) bool {
 	return r.selectors.matches(selectors)
 }

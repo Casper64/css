@@ -1,6 +1,6 @@
 module token
 
-[minify]
+@[minify]
 pub struct Token {
 pub:
 	kind    Kind   // the token number/enum; for quick comparisons

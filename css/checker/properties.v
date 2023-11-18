@@ -55,7 +55,8 @@ pub fn (pv &PropertyValidator) validate_property(property string, raw_value ast.
 			return pv.validate_single_color_prop(property, raw_value)!
 		}
 		'bottom', 'height', 'left', 'letter-spacing', 'line-height', 'max-height', 'max-width',
-		'min-height', 'min-width', 'right', 'top', 'width', 'word-spacing', 'z-index' {
+		'min-height', 'min-width', 'right', 'text-indent', 'top', 'width', 'word-spacing',
+		'z-index' {
 			return pv.validate_single_dimension_prop(property, raw_value)!
 		}
 		'opacity' {
@@ -70,14 +71,16 @@ pub fn (pv &PropertyValidator) validate_property(property string, raw_value ast.
 		// TODO: these values aren't used that often, check if it's faster to match them at the end of the `else` clause
 		'align-content', 'align-items', 'align-self', 'all', 'backface-visibility', 'cursor',
 		'display', 'float', 'justify-content', 'justify-items', 'justify-self', 'pointer-events',
-		'position', 'scroll-behavior', 'user-select', 'vertical-align', 'visibility',
-		'white-space', 'word-break', 'word-wrap', 'writing-mode' {
+		'position', 'scroll-behavior', 'text-justify', 'text-overflow', 'text-transform',
+		'user-select', 'vertical-align', 'visibility', 'white-space', 'word-break', 'word-wrap',
+		'writing-mode' {
 			return pv.validate_single_keyword_prop(property, raw_value)!
 		}
 		else {
 			// handle properties with similair endings / starts
-
-			if property.ends_with('-color') {
+			if property.starts_with('background') {
+				return pv.validate_background(property, raw_value)
+			} else if property.ends_with('-color') {
 				// for properties like `background-color`, or `border-left-color`
 				return pv.validate_single_color_prop(property, raw_value)!
 			} else if property.starts_with('margin-') || property.starts_with('padding-') {
@@ -275,7 +278,10 @@ pub fn (pv &PropertyValidator) validate_alpha_value_prop(prop_name string, raw_v
 }
 
 pub fn (pv &PropertyValidator) valditate_margin_padding(prop_name string, raw_value ast.Value) !css.Value {
-	if four_dim_endings.any(|ending| prop_name.ends_with(ending)) {
+	if four_dim_endings.any(fn [prop_name] (ending string) bool {
+		return prop_name.ends_with(ending)
+	})
+	{
 		return pv.validate_single_dimension_prop(prop_name, raw_value)!
 	}
 
@@ -307,4 +313,36 @@ pub fn (pv &PropertyValidator) validate_4_dim_value_prop(prop_name string, raw_v
 	} else {
 		return css.MarginPadding{vals[0], vals[1], vals[2], vals[3]}
 	}
+}
+
+pub fn (pv &PropertyValidator) validate_background(prop_name string, raw_value ast.Value) !css.Value {
+	match prop_name {
+		'background-color' {
+			return pv.validate_single_color_prop(prop_name, raw_value)!
+		}
+		'background-attachement', 'background-blend-mode', 'background-clip' {
+			return pv.validate_single_keyword_prop(prop_name, raw_value)!
+		}
+		'background-image' {
+			return pv.validate_image(prop_name, raw_value)!
+		}
+		else {
+			return error(pv.unsupported_property(prop_name))
+		}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_image(prop_name string, raw_value ast.Value) !css.Image {
+	for item in raw_value.children {
+		match item {
+			ast.Function {
+				if item.name.ends_with('-gradient') {
+					return pv.validate_fn_gradients(prop_name, item.name, item)!
+				}
+			}
+			else {}
+		}
+	}
+
+	return error(pv.unsupported_property(prop_name))
 }

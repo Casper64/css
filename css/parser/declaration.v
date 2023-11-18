@@ -275,7 +275,7 @@ pub fn (mut p Parser) validate_hex_color(val string) ! {
 	// that means it is an invalid hex color
 	// #0000zz
 	// #0000width
-	if p.peek_tok.kind !in [.comma, .semicolon, .rcbr, .exclamation]
+	if p.peek_tok.kind !in [.comma, .semicolon, .rcbr, .rpar, .exclamation]
 		&& p.peek_tok.pos == p.tok.pos + p.tok.len {
 		return p.error_with_pos('invalid hex color', p.tok.pos().extend(p.peek_tok.pos()))
 	}

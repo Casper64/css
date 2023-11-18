@@ -15,12 +15,13 @@
     animation-play-state: running;
     animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); */
     backface-visibility: hidden; 
-    background: linear-gradient(to left, #ffffff, black);
-    /* background-attachment: fixed;
+    /* background: linear-gradient(to left, #ffffff, black); */
+    background-attachment: fixed;
     background-blend-mode: multiply;
-    background-clip: content-box; */
+    background-clip: content-box; 
     background-color: green;
     background-image: url('test.png');
+    background-image: linear-gradient(red, #0000ff);
     /* background-origin: padding-box; */
     background-position: 50% 50% ;
     background-repeat: no-repeat;
@@ -171,11 +172,11 @@
     text-decoration-color: blue;
     text-decoration-line: underline;
     text-decoration-style: wavy;
-    /* text-indent: ;
-    text-justify: ;
-    text-overflow: ;
-    text-shadow: ;
-    text-transform: ; */
+    text-indent: 40px;
+    text-justify: inter-cluster;
+    text-overflow: ellipsis;
+    /* text-shadow: ; */
+    text-transform: uppercase;
     top: 1px;
     /* transform: ;
     transform-origin: ;

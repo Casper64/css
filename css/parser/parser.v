@@ -42,7 +42,7 @@ pub fn Parser.new(prefs &pref.Preferences) &Parser {
 fn (mut p Parser) init(filename string) {
 }
 
-[manualfree]
+@[manualfree]
 pub fn (mut p Parser) free_lexer() {
 	unsafe {
 		if p.lexer != 0 {
@@ -300,7 +300,7 @@ pub fn (mut p Parser) skip_block() {
 	p.next()
 }
 
-[params]
+@[params]
 struct ParamsForUnexpected {
 	got            string
 	expecting      string
