@@ -23,15 +23,10 @@ pub fn (mut c Checker) validate_declarations(declarations []ast.Node) map[string
 				prop_name := replace_vendor_prefix(decl.property)
 
 				if value := c.validator.validate_property(prop_name, decl.value) {
-					// group grouped properties, TODO: think about !important when grouping?
-					was_grouped_value := c.validator.set_grouped(prop_name, value, mut
-						style_map)
-					if !was_grouped_value {
-						// use normal property name to include browser prefix
-						style_map[decl.property] = css.RawValue{
-							important: decl.important
-							value: value
-						}
+					// use normal property name to include browser prefix
+					style_map[decl.property] = css.RawValue{
+						important: decl.important
+						value: value
 					}
 				} else {
 					if err is ast.NodeError {

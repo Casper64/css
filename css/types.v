@@ -314,9 +314,9 @@ pub fn (rules []Rule) get_styles() map[string]Value {
 	for rule in rules {
 		for property, value in rule.declarations {
 			if !value.important && importants[property] == false {
-				styles[property] = value.value
+				set_grouped(property, value.value, mut styles)
 			} else if value.important {
-				styles[property] = value.value
+				set_grouped(property, value.value, mut styles)
 				importants[property] = true
 			}
 		}
