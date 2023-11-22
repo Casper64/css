@@ -1,0 +1,8 @@
+
+
+.no_errors {
+    background-image: url(https://example.com/images/myImg.jpg);
+    background-image: url(data:image/png;base64,iRxVB0…);
+    background-image: url(myFont.woff);
+    background-image: url(#IDofSVGpath);
+}

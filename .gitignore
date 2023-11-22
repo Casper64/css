@@ -2,6 +2,7 @@
 *.txt
 js/
 dist/
+test_stuff/
 
 # don't include top level V files
 /*.v

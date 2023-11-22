@@ -15,7 +15,7 @@ pub type DimensionValue = Keyword
 
 pub type Keyword = string
 
-pub type Image = Gradient | Keyword | datatypes.Url
+pub type Image = Gradient | Keyword | Url
 
 pub type Value = AlphaValue
 	| Background

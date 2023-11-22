@@ -75,7 +75,40 @@ pub fn (pv &PropertyValidator) validate_fn_rgb(func ast.Function) !datatypes.Col
 	}
 }
 
-@[direct_array_access]
+pub fn (pv &PropertyValidator) validate_fn_url(fn_name string, raw_value ast.Function) !css.Url {
+	if raw_value.children.len == 0 || raw_value.children.len > 2 {
+		return ast.NodeError{
+			msg: 'the function "${fn_name}" expects 1 or 2 arguments'
+			pos: raw_value.pos
+		}
+	}
+
+	mut url := css.Url{}
+
+	first_val := raw_value.children[0]
+	if first_val is ast.String {
+		url.value = first_val.value
+	} else {
+		return ast.NodeError{
+			msg: 'invalid value for function "${fn_name}"'
+			pos: first_val.pos()
+		}
+	}
+
+	if url.value[0] == `#` {
+		url.kind = .element
+		url.value = url.value[1..]
+	} else if url.value.starts_with('data:') {
+		url.kind = .data
+	} else if url.value.starts_with('http') {
+		url.kind = .link
+	} else {
+		url.kind = .file
+	}
+
+	return url
+}
+
 pub fn (pv &PropertyValidator) validate_fn_gradients(prop_name string, gradient_name string, raw_value ast.Function) !css.Gradient {
 	if raw_value.children.len < 2 {
 		return ast.NodeError{

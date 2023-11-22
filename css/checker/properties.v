@@ -49,7 +49,6 @@ pub fn (mut c Checker) validate_declarations(declarations []ast.Node) map[string
 }
 
 pub fn (pv &PropertyValidator) validate_property(property string, raw_value ast.Value) !css.Value {
-	// TODO: grouped properties e.g. `background: `
 	match property {
 		'color' {
 			return pv.validate_single_color_prop(property, raw_value)!
@@ -315,6 +314,28 @@ pub fn (pv &PropertyValidator) validate_4_dim_value_prop(prop_name string, raw_v
 	}
 }
 
+pub fn (pv &PropertyValidator) validate_image(prop_name string, raw_value ast.Value) !css.Image {
+	for item in raw_value.children {
+		match item {
+			ast.Function {
+				if item.name.ends_with('-gradient') {
+					return pv.validate_fn_gradients(prop_name, item.name, item)!
+				} else if item.name == 'url' {
+					return pv.validate_fn_url(item.name, item)!
+				} else {
+					return ast.NodeError{
+						msg: 'Invalid function for property "${prop_name}".\n${errors.did_you_mean(valid_image_fns)}'
+						pos: item.pos
+					}
+				}
+			}
+			else {}
+		}
+	}
+
+	return error(pv.unsupported_property(prop_name))
+}
+
 pub fn (pv &PropertyValidator) validate_background(prop_name string, raw_value ast.Value) !css.Value {
 	match prop_name {
 		'background-color' {
@@ -326,23 +347,13 @@ pub fn (pv &PropertyValidator) validate_background(prop_name string, raw_value a
 		'background-image' {
 			return pv.validate_image(prop_name, raw_value)!
 		}
+		// 'background-position' {
+		// 	return pv.validate_background_position(raw_value)!
+		// }
 		else {
 			return error(pv.unsupported_property(prop_name))
 		}
 	}
 }
 
-pub fn (pv &PropertyValidator) validate_image(prop_name string, raw_value ast.Value) !css.Image {
-	for item in raw_value.children {
-		match item {
-			ast.Function {
-				if item.name.ends_with('-gradient') {
-					return pv.validate_fn_gradients(prop_name, item.name, item)!
-				}
-			}
-			else {}
-		}
-	}
-
-	return error(pv.unsupported_property(prop_name))
-}
+// pub fn (pv &PropertyValidator) validate_background_position(raw_value ast.Value)

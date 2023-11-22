@@ -20,9 +20,10 @@ pub enum AtType {
 
 pub struct NodeError {
 pub:
-	pos  token.Pos
-	msg  string
-	code int
+	pos           token.Pos
+	msg           string
+	code          int
+	is_unexpected bool
 }
 
 pub fn (n NodeError) msg() string {

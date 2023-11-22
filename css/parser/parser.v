@@ -23,8 +23,9 @@ mut:
 	is_pseudo_element      bool
 	is_important           bool
 	// ast_imports // @import()
-	error_details []string
-	should_abort  bool // when t oo many warnings/errors occur should_abort becomes true and the parser should stop
+	error_details   []string
+	should_abort    bool // when t oo many warnings/errors occur should_abort becomes true and the parser should stop
+	mute_unexpected bool
 pub mut:
 	table       &ast.Table   = unsafe { nil }
 	lexer       &lexer.Lexer = unsafe { nil }
@@ -327,7 +328,16 @@ fn (mut p Parser) unexpected_with_pos(pos token.Pos, params ParamsForUnexpected)
 	if params.additional_msg != '' {
 		msg += ', ${params.additional_msg}'
 	}
-	return p.error_with_pos(msg, pos)
+
+	if p.mute_unexpected {
+		return ast.NodeError{
+			pos: pos
+			msg: msg
+			is_unexpected: true
+		}
+	} else {
+		return p.error_with_pos(msg, pos)
+	}
 }
 
 pub fn (mut p Parser) warn(msg string) {

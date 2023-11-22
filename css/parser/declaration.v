@@ -128,7 +128,12 @@ pub fn (mut p Parser) parse_value_children() ![]ast.Node {
 				hash_start := p.tok.pos()
 				if p.peek_tok.kind != .color {
 					// color: #;
-					return p.error_with_pos('expecting a hex color', hash_start.extend(p.peek_tok.pos()))
+					// return p.error_with_pos('expecting a hex color', hash_start.extend(p.peek_tok.pos()))
+					// return ast.NodeError{
+					// 	msg: 'expecting a hex color'
+					// 	pos: hash_start.extend(p.peek_tok.pos())
+					// }
+					return p.unexpected()
 				}
 				p.next()
 				p.validate_hex_color(p.tok.lit)!
@@ -251,7 +256,44 @@ pub fn (mut p Parser) parse_function() !ast.Function {
 	defer {
 		p.parentheses_depth--
 	}
-	children := p.parse_value_children()!
+
+	children_start := p.tok.pos()
+	p.mute_unexpected = true
+	defer {
+		p.mute_unexpected = false
+	}
+
+	children := p.parse_value_children() or {
+		// we can expect "unexpected token" errors in a function, if the error
+		// wasn't an unexpected token we need to return the error
+		if err is ast.NodeError {
+			if err.is_unexpected == false {
+				return err
+			}
+		}
+		// the error was an unexpected token error, so we convert the chidren
+		// to a string. This is especially usefull for the `url` function
+		// e.g. `background-image: url(data:image/png;base64,iRxVB0…);`
+		if p.tok.kind !in [.rpar, .semicolon] {
+			for p.tok.kind != .rpar {
+				p.next()
+			}
+		}
+
+		// turn all children into one string if an error occurs
+		final_pos := children_start.extend(p.prev_tok.pos())
+
+		return ast.Function{
+			pos: fn_start.extend(p.tok.pos())
+			name: fn_name
+			children: [
+				ast.String{
+					pos: final_pos
+					value: p.lexer.get_lit(final_pos.pos, final_pos.pos + final_pos.len)
+				},
+			]
+		}
+	}
 
 	if p.tok.kind != .rpar {
 		return p.error('expecting closing parenthesis ")" not ${p.tok.kind}')
