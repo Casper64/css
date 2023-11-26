@@ -1,11 +1,9 @@
 import css.util as css_util
 import os
 
-const (
-	in_file              = 'css/gen/tests/testdata/pretty.css'
-	expected_pretty_file = 'css/gen/tests/testdata/pretty_out.css'
-	expected_min_file    = 'css/gen/tests/testdata/pretty_out.min.css'
-)
+const in_file = 'css/gen/tests/testdata/pretty.css'
+const expected_pretty_file = 'css/gen/tests/testdata/pretty_out.css'
+const expected_min_file = 'css/gen/tests/testdata/pretty_out.min.css'
 
 fn test_gen_pretty() {
 	out_file := '${os.temp_dir()}/gen_pretty_out.css'

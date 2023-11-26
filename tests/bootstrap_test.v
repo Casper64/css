@@ -2,10 +2,8 @@ import css.ast
 import css.parser
 import css.pref
 
-const (
-	css_file     = '${@VMODROOT}/tests/testdata/bootstrap.css'
-	min_css_file = '${@VMODROOT}/tests/testdata/bootstrap.min.css'
-)
+const css_file = '${@VMODROOT}/tests/testdata/bootstrap.css'
+const min_css_file = '${@VMODROOT}/tests/testdata/bootstrap.min.css'
 
 fn test_parser_no_errors() {
 	mut p := parser.Parser.new(&pref.Preferences{

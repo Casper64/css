@@ -3,9 +3,7 @@ import css.datatypes
 import css.pref
 import css.util as css_util
 
-const (
-	preferences = &pref.Preferences{}
-)
+const preferences = &pref.Preferences{}
 
 // -webkit- and -moz- should end up in the styles map,
 // but be parsed as if the browser prefix isn't present.

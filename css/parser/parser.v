@@ -7,9 +7,7 @@ import css.pref
 import css.token
 import os
 
-const (
-	double_quote = '"'
-)
+const double_quote = '"'
 
 pub struct Parser {
 	prefs &pref.Preferences

@@ -3,9 +3,7 @@ import css.datatypes
 import css.pref
 import css.util as css_util
 
-const (
-	preferences = &pref.Preferences{}
-)
+const preferences = &pref.Preferences{}
 
 fn test_rgb() {
 	rules := css_util.parse_stylesheet_from_text('.t { color: rgb(10 20 30); }', preferences)!

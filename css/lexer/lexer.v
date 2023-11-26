@@ -5,13 +5,11 @@ import css.pref
 import css.token
 import os
 
-const (
-	single_quote = `'`
-	double_quote = `"`
-	backslash    = `\\`
-	b_lf         = 10
-	b_cr         = 13
-)
+const single_quote = `'`
+const double_quote = `"`
+const backslash = `\\`
+const b_lf = 10
+const b_cr = 13
 
 pub fn new_lexer_file(prefs &pref.Preferences, file_path string) !&Lexer {
 	if !os.is_file(file_path) {
@@ -46,7 +44,6 @@ pub mut:
 	is_started       bool
 	is_inside_string bool
 	is_inside_rule   bool
-	is_hex_color     bool
 	error_details    []string
 	should_abort     bool
 	is_vh            bool // Keep newlines
@@ -452,14 +449,6 @@ fn (mut l Lexer) text_scan() token.Token {
 			return l.end_of_file()
 		}
 
-		if l.is_hex_color {
-			color := l.ident_color()
-			l.is_hex_color = false
-			if color.len != 0 {
-				return l.new_token(.color, color, color.len)
-			}
-		}
-
 		l.skip_whitespace()
 		// end of file
 		if l.pos >= l.text.len {
@@ -525,7 +514,6 @@ fn (mut l Lexer) text_scan() token.Token {
 				return l.new_token(.dot, '', 1)
 			}
 			`#` {
-				l.is_hex_color = true
 				return l.new_token(.hash, '', 1)
 			}
 			`@` {

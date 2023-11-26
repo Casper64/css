@@ -6,9 +6,7 @@ import term
 import time
 import v.util.diff
 
-const (
-	test_program_name = 'test_program.v'
-)
+const test_program_name = 'test_program.v'
 
 const turn_off_vcolors = os.setenv('VCOLORS', 'never', true)
 

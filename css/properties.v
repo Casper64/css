@@ -2,12 +2,10 @@ module css
 
 import css.datatypes
 
-const (
-	zero_px = datatypes.Length{
-		amount: 0
-		unit: .px
-	}
-)
+const zero_px = datatypes.Length{
+	amount: 0
+	unit: .px
+}
 
 // collection of properties listed here:
 // https://developer.mozilla.org/en-US/docs/Web/CSS/background

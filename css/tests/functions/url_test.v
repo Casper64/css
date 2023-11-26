@@ -3,9 +3,7 @@ import css.datatypes
 import css.pref
 import css.util as css_util
 
-const (
-	preferences = &pref.Preferences{}
-)
+const preferences = &pref.Preferences{}
 
 fn test_url_element() {
 	rules := css_util.parse_stylesheet_from_text('.t { background-image: url(#element); }',

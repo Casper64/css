@@ -5,3 +5,7 @@
     background-image: url(myFont.woff);
     background-image: url(#IDofSVGpath);
 }
+
+.invalid_child {
+    background-image: url(10px);
+}

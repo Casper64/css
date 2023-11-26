@@ -9,10 +9,8 @@ import v.mathutil as mu
 
 // error_context_before - how many lines of source context to print before the pointer line
 // error_context_after - ^^^ same, but after
-const (
-	error_context_before = 2
-	error_context_after  = 2
-)
+const error_context_before = 2
+const error_context_after = 2
 
 @[params]
 pub struct CompilerMessage {

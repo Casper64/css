@@ -126,20 +126,38 @@ pub fn (mut p Parser) parse_value_children() ![]ast.Node {
 			}
 			.hash {
 				hash_start := p.tok.pos()
-				if p.peek_tok.kind != .color {
-					// color: #;
-					// return p.error_with_pos('expecting a hex color', hash_start.extend(p.peek_tok.pos()))
-					// return ast.NodeError{
-					// 	msg: 'expecting a hex color'
-					// 	pos: hash_start.extend(p.peek_tok.pos())
-					// }
-					return p.unexpected()
+
+				color_start := p.peek_tok.pos()
+				for p.peek_tok.kind in [.name, .number] {
+					current_pos_end := p.tok.pos().pos + p.tok.pos().len
+					// break when a space occurs: #fff url()
+					if current_pos_end != p.peek_tok.pos().pos {
+						break
+					}
+					p.next()
 				}
-				p.next()
-				p.validate_hex_color(p.tok.lit)!
+
+				hex_color := p.lexer.get_lit(color_start.pos, p.tok.pos().pos + p.tok.pos().len)
+				if hex_color.len == 0 {
+					return p.error('expecting a hex color')
+				}
+
+				if p.validate_hex_color(hex_color) == false {
+					// treat the hash element as an ident when inside a function
+					if p.parentheses_depth != 0 {
+						children << ast.Hash{
+							pos: hash_start.extend(p.tok.pos())
+							value: hex_color
+						}
+						p.next()
+						continue
+					}
+					return p.error_with_pos('invalid hex color', hash_start.extend(p.tok.pos()))
+				}
+
 				children << ast.Hash{
 					pos: hash_start.extend(p.tok.pos())
-					value: p.tok.lit
+					value: hex_color
 				}
 			}
 			// operators
@@ -305,20 +323,7 @@ pub fn (mut p Parser) parse_function() !ast.Function {
 	}
 }
 
-// returns error if not valid
-pub fn (mut p Parser) validate_hex_color(val string) ! {
-	if val.to_lower().contains_only('abcdef0123456789') == false {
-		return p.error('invalid hex color')
-	}
-
-	// TODO: handle this in checker?
-
-	// check if the next token is next to the color and if that token is not ; or , or ! or }
-	// that means it is an invalid hex color
-	// #0000zz
-	// #0000width
-	if p.peek_tok.kind !in [.comma, .semicolon, .rcbr, .rpar, .exclamation]
-		&& p.peek_tok.pos == p.tok.pos + p.tok.len {
-		return p.error_with_pos('invalid hex color', p.tok.pos().extend(p.peek_tok.pos()))
-	}
+@[inline]
+pub fn (mut p Parser) validate_hex_color(val string) bool {
+	return val.to_lower().contains_only('abcdef0123456789')
 }

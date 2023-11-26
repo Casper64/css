@@ -329,7 +329,12 @@ pub fn (pv &PropertyValidator) validate_image(prop_name string, raw_value ast.Va
 					}
 				}
 			}
-			else {}
+			else {
+				return ast.NodeError{
+					msg: 'invalid or unsupported value for "${prop_name}"'
+					pos: item.pos()
+				}
+			}
 		}
 	}
 

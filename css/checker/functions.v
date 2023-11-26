@@ -88,6 +88,10 @@ pub fn (pv &PropertyValidator) validate_fn_url(fn_name string, raw_value ast.Fun
 	first_val := raw_value.children[0]
 	if first_val is ast.String {
 		url.value = first_val.value
+	} else if first_val is ast.Hash {
+		url.value = first_val.value
+		url.kind = .element
+		return url
 	} else {
 		return ast.NodeError{
 			msg: 'invalid value for function "${fn_name}"'
