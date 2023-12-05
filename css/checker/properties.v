@@ -102,6 +102,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		'border' {
 			return pv.validate_border(raw_value)!
 		}
+		'border-top', 'border-right', 'border-bottom', 'border-left' {
+			return pv.validate_single_border(property, raw_value)!
+		}
 		'border-color' {
 			return pv.validate_border_color(raw_value)!
 		}
@@ -727,16 +730,32 @@ pub fn (pv &PropertyValidator) validate_border_style(raw_value ast.Value) !css.B
 }
 
 pub fn (pv &PropertyValidator) validate_border(raw_value ast.Value) !css.Border {
-	mut border := css.Border{}
+	single_border := pv.validate_single_border('border', raw_value)!
+
+	return css.Border{
+		colors: css.BorderColors{single_border.color, single_border.color, single_border.color, single_border.color}
+		styles: css.BorderStyles{single_border.style, single_border.style, single_border.style, single_border.style}
+		widths: css.FourDimensions{single_border.width, single_border.width, single_border.width, single_border.width}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_single_border(prop_name string, raw_value ast.Value) !css.SingleBorder {
+	mut border := css.SingleBorder{}
 
 	if raw_value.children.len == 1 {
-		style := pv.validate_border_style_value('border', raw_value.children[0])!
-		border.styles = css.BorderStyles{style, style, style, style}
+		child := raw_value.children[0]
+		if child is ast.Number && child.value == '0' {
+			border.width = 0.0
+			return border
+		}
+
+		style := pv.validate_border_style_value('border', child)!
+		border.style = style
 
 		if style is css.Keyword {
 			// all should be this keyword
-			border.colors = css.BorderColors{style, style, style, style}
-			border.widths = css.FourDimensions{style, style, style, style}
+			border.color = style
+			border.width = style
 		}
 		// else it's only a style value
 		return border
@@ -747,66 +766,64 @@ pub fn (pv &PropertyValidator) validate_border(raw_value ast.Value) !css.Border 
 		}
 	}
 
-	mut colors := ?css.BorderColors(none)
-	mut styles := ?css.BorderStyles(none)
-	mut widths := ?css.FourDimensions(none)
+	mut color := ?css.ColorValue(none)
+	mut style := ?css.BorderLineStyle(none)
+	mut width := ?css.DimensionValue(none)
 
 	for child in raw_value.children {
 		match child {
 			ast.Dimension {
-				if widths != none {
+				if width != none {
 					return ast.NodeError{
 						msg: 'only 1 dimension value is allowed for property "border"'
 						pos: child.pos
 					}
 				}
-				width := pv.validate_dimension('border', child)!
-				widths = css.FourDimensions{width, width, width, width}
+				width = pv.validate_dimension('border', child)!
 			}
 			ast.Ident {
-				style := pv.validate_border_style_value('border', child)!
-				if style is css.Keyword {
+				style_val := pv.validate_border_style_value('border', child)!
+				if style_val is css.Keyword {
 					// it's a color
-					if colors != none {
+					if color != none {
 						return ast.NodeError{
-							msg: 'only 1 color value is allowed for property "border"'
+							msg: 'only 1 color value is allowed for property "${prop_name}"'
 							pos: child.pos
 						}
 					}
-					colors = css.BorderColors{style, style, style, style}
+					color = style_val
 				} else {
 					// it's a style
-					if styles != none {
+					if style != none {
 						return ast.NodeError{
 							msg: 'only 1 border-style value is allowed for property "border"'
 							pos: child.pos
 						}
 					}
-					styles = css.BorderStyles{style, style, style, style}
+					style = style_val
 				}
 			}
 			ast.Hash, ast.Function {
-				if colors != none {
+				if color != none {
 					return ast.NodeError{
 						msg: 'only 1 color value is allowed for property "border"'
 						pos: child.pos
 					}
 				}
-				color := pv.validate_single_color('border', child)!
-				colors = css.BorderColors{color, color, color, color}
+				color = pv.validate_single_color('border', child)!
 			}
 			else {}
 		}
 	}
 
-	if c := colors {
-		border.colors = c
+	if c := color {
+		border.color = c
 	}
-	if s := styles {
-		border.styles = s
+	if s := style {
+		border.style = s
 	}
-	if w := widths {
-		border.widths = w
+	if w := width {
+		border.width = w
 	}
 	return border
 }

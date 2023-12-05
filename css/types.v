@@ -31,6 +31,7 @@ pub type Value = AlphaValue
 	| Keyword
 	| Overflow
 	| Shadow
+	| SingleBorder
 	| Text
 	| TextCombineUpright
 	| TextEllipsis

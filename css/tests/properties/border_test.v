@@ -306,3 +306,33 @@ fn test_border_merged() {
 		}
 	}
 }
+
+fn test_single_border() {
+	rules := css_util.parse_stylesheet_from_text('.t {
+		border: red dashed 2px;
+		border-bottom: green dotted 4px;
+		border-bottom-color: yellow;
+	}',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dashed, datatypes.LineStyle.dashed, datatypes.LineStyle.dotted, datatypes.LineStyle.dashed}
+			colors: css.BorderColors{'red', 'red', 'yellow', 'red'}
+			widths: css.FourDimensions{datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 4
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}}
+		}
+	}
+}

@@ -25,6 +25,13 @@ pub mut:
 	collapse Keyword = 'separate'
 }
 
+pub struct SingleBorder {
+pub mut:
+	color ?ColorValue
+	style BorderLineStyle = datatypes.LineStyle.@none
+	width DimensionValue  = css.zero_px
+}
+
 pub struct BorderColors {
 pub mut:
 	top    ?ColorValue

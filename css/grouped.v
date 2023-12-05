@@ -117,6 +117,30 @@ fn set_grouped_border(prop_name string, value Value, mut style_map map[string]Va
 		'border-collapse' {
 			border_val.collapse = value as Keyword
 		}
+		'border-top' {
+			sb := value as SingleBorder
+			border_val.colors.top = sb.color
+			border_val.styles.top = sb.style
+			border_val.widths.top = sb.width
+		}
+		'border-right' {
+			sb := value as SingleBorder
+			border_val.colors.right = sb.color
+			border_val.styles.right = sb.style
+			border_val.widths.right = sb.width
+		}
+		'border-bottom' {
+			sb := value as SingleBorder
+			border_val.colors.bottom = sb.color
+			border_val.styles.bottom = sb.style
+			border_val.widths.bottom = sb.width
+		}
+		'border-left' {
+			sb := value as SingleBorder
+			border_val.colors.left = sb.color
+			border_val.styles.left = sb.style
+			border_val.widths.left = sb.width
+		}
 		else {
 			if prop_name.ends_with('-color') {
 				border_val.colors = get_grouped_border_color(prop_name, value, style_map)
