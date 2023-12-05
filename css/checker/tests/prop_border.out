@@ -39,3 +39,32 @@ css/checker/tests/prop_border.css:12:19: error: invalid value for property "bord
    12 |     border-style: "wjat!!";
       |                   ~~~~~~~~
    13 | }
+   14 |
+css/checker/tests/prop_border.css:16:19: error: only 1 border-style value is allowed for property "border"
+   14 | 
+   15 | .border {
+   16 |     border: solid solid;
+      |                   ~~~~~
+   17 |     border: 2px 2px;
+   18 |     border: red red;
+css/checker/tests/prop_border.css:17:17: error: only 1 dimension value is allowed for property "border"
+   15 | .border {
+   16 |     border: solid solid;
+   17 |     border: 2px 2px;
+      |                 ~~~
+   18 |     border: red red;
+   19 |     border: solid red 2px green;
+css/checker/tests/prop_border.css:18:17: error: only 1 color value is allowed for property "border"
+   16 |     border: solid solid;
+   17 |     border: 2px 2px;
+   18 |     border: red red;
+      |                 ~~~
+   19 |     border: solid red 2px green;
+   20 |     border: inherit;
+css/checker/tests/prop_border.css:19:13: error: property "border" can have a maximum of 3 values!
+   17 |     border: 2px 2px;
+   18 |     border: red red;
+   19 |     border: solid red 2px green;
+      |             ~~~~~~~~~~~~~~~~~~~~
+   20 |     border: inherit;
+   21 | }

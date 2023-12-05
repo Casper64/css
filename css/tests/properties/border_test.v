@@ -172,3 +172,137 @@ fn test_border_width_merged() {
 		}
 	}
 }
+
+fn test_border_keyword() {
+	rules := css_util.parse_stylesheet_from_text('.t { border: inherit; }', preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			colors: css.BorderColors{css.Keyword('inherit'), css.Keyword('inherit'), css.Keyword('inherit'), css.Keyword('inherit')}
+			styles: css.BorderStyles{css.Keyword('inherit'), css.Keyword('inherit'), css.Keyword('inherit'), css.Keyword('inherit')}
+			widths: css.FourDimensions{css.Keyword('inherit'), css.Keyword('inherit'), css.Keyword('inherit'), css.Keyword('inherit')}
+		}
+	}
+}
+
+fn test_border_single_style() {
+	rules := css_util.parse_stylesheet_from_text('.t { border: dotted; }', preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dotted, datatypes.LineStyle.dotted, datatypes.LineStyle.dotted, datatypes.LineStyle.dotted}
+		}
+	}
+}
+
+fn test_border_width_style() {
+	rules := css_util.parse_stylesheet_from_text('.t { border: 2px dotted; }', preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dotted, datatypes.LineStyle.dotted, datatypes.LineStyle.dotted, datatypes.LineStyle.dotted}
+			widths: css.FourDimensions{datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}}
+		}
+	}
+}
+
+fn test_border_style_color() {
+	rules := css_util.parse_stylesheet_from_text('.t { border: outset #f33; }', preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.outset, datatypes.LineStyle.outset, datatypes.LineStyle.outset, datatypes.LineStyle.outset}
+			colors: css.BorderColors{datatypes.Color{
+				r: 255
+				g: 51
+				b: 51
+			}, datatypes.Color{
+				r: 255
+				g: 51
+				b: 51
+			}, datatypes.Color{
+				r: 255
+				g: 51
+				b: 51
+			}, datatypes.Color{
+				r: 255
+				g: 51
+				b: 51
+			}}
+		}
+	}
+}
+
+fn test_border_all() {
+	rules := css_util.parse_stylesheet_from_text('.t { border: green dashed 2px; }', preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dashed, datatypes.LineStyle.dashed, datatypes.LineStyle.dashed, datatypes.LineStyle.dashed}
+			colors: css.BorderColors{'green', 'green', 'green', 'green'}
+			widths: css.FourDimensions{datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}}
+		}
+	}
+}
+
+fn test_border_merged() {
+	rules := css_util.parse_stylesheet_from_text('.t { 
+		border-collapse: collapse; 
+		border: green dashed 2px; 
+		border-top-width: 4px; 
+		border-right-color: red; 
+		border-bottom-style: dotted; 
+	}',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			collapse: 'collapse'
+			styles: css.BorderStyles{datatypes.LineStyle.dashed, datatypes.LineStyle.dashed, datatypes.LineStyle.dotted, datatypes.LineStyle.dashed}
+			colors: css.BorderColors{'green', 'red', 'green', 'green'}
+			widths: css.FourDimensions{datatypes.Length{
+				amount: 4
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}, datatypes.Length{
+				amount: 2
+				unit: .px
+			}}
+		}
+	}
+}

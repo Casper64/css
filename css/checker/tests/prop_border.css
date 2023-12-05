@@ -11,3 +11,11 @@
     border-color: 10px;
     border-style: "wjat!!";
 }
+
+.border {
+    border: solid solid;
+    border: 2px 2px;
+    border: red red;
+    border: solid red 2px green;
+    border: inherit;
+}

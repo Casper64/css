@@ -16,7 +16,7 @@ fn set_grouped(prop_name string, value Value, mut style_map map[string]Value) {
 		set_grouped_text(prop_name, value, mut style_map)
 	} else if prop_name.starts_with('overflow-') {
 		set_grouped_overflow(prop_name, value, mut style_map)
-	} else if prop_name.starts_with('border-') {
+	} else if prop_name.starts_with('border') {
 		set_grouped_border(prop_name, value, mut style_map)
 	} else {
 		style_map[prop_name] = value
@@ -99,6 +99,12 @@ fn set_grouped_border(prop_name string, value Value, mut style_map map[string]Va
 	mut border_val := (style_map['border'] or { Border{} }) as Border
 
 	match prop_name {
+		'border' {
+			border := value as Border
+			border_val.colors = border.colors
+			border_val.styles = border.styles
+			border_val.widths = border.widths
+		}
 		'border-color' {
 			border_val.colors = value as BorderColors
 		}
@@ -107,6 +113,9 @@ fn set_grouped_border(prop_name string, value Value, mut style_map map[string]Va
 		}
 		'border-width' {
 			border_val.widths = value as FourDimensions
+		}
+		'border-collapse' {
+			border_val.collapse = value as Keyword
 		}
 		else {
 			if prop_name.ends_with('-color') {

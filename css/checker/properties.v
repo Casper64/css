@@ -81,13 +81,13 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		// TODO: these values aren't used that often, check if it's faster to match them at the end of the `else` clause
 		'align-content', 'align-items', 'align-self', 'all', 'appearance', 'backface-visibility',
-		'box-sizing', 'caption-side', 'clear', 'cursor', 'direction', 'display', 'empty-cells',
-		'float', 'forced-color-adjust', 'isolation', 'justify-content', 'justify-items',
-		'justify-self', 'mix-blend-mode', 'object-fit', 'overflow-x', 'overflow-y',
-		'pointer-events', 'position', 'print-color-adjust', 'resize', 'scroll-behavior',
-		'table-layout', 'text-align', 'text-align-last', 'text-justify', 'text-rendering',
-		'text-transform', 'text-wrap', 'touch-action', 'unicode-bidi', 'user-select', 'visibility',
-		'white-space', 'word-break', 'word-wrap', 'writing-mode' {
+		'border-collapse', 'box-sizing', 'caption-side', 'clear', 'cursor', 'direction', 'display',
+		'empty-cells', 'float', 'forced-color-adjust', 'isolation', 'justify-content',
+		'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit', 'overflow-x',
+		'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize',
+		'scroll-behavior', 'table-layout', 'text-align', 'text-align-last', 'text-justify',
+		'text-rendering', 'text-transform', 'text-wrap', 'touch-action', 'unicode-bidi',
+		'user-select', 'visibility', 'white-space', 'word-break', 'word-wrap', 'writing-mode' {
 			return pv.validate_single_keyword_prop(property, raw_value)!
 		}
 		'text-overflow' {
@@ -98,6 +98,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		'overflow' {
 			return pv.validate_overflow(raw_value)!
+		}
+		'border' {
+			return pv.validate_border(raw_value)!
 		}
 		'border-color' {
 			return pv.validate_border_color(raw_value)!
@@ -721,4 +724,89 @@ pub fn (pv &PropertyValidator) validate_border_style(raw_value ast.Value) !css.B
 			pos: raw_value.pos
 		}
 	}
+}
+
+pub fn (pv &PropertyValidator) validate_border(raw_value ast.Value) !css.Border {
+	mut border := css.Border{}
+
+	if raw_value.children.len == 1 {
+		style := pv.validate_border_style_value('border', raw_value.children[0])!
+		border.styles = css.BorderStyles{style, style, style, style}
+
+		if style is css.Keyword {
+			// all should be this keyword
+			border.colors = css.BorderColors{style, style, style, style}
+			border.widths = css.FourDimensions{style, style, style, style}
+		}
+		// else it's only a style value
+		return border
+	} else if raw_value.children.len > 3 {
+		return ast.NodeError{
+			msg: 'property "border" can have a maximum of 3 values!'
+			pos: raw_value.pos
+		}
+	}
+
+	mut colors := ?css.BorderColors(none)
+	mut styles := ?css.BorderStyles(none)
+	mut widths := ?css.FourDimensions(none)
+
+	for child in raw_value.children {
+		match child {
+			ast.Dimension {
+				if widths != none {
+					return ast.NodeError{
+						msg: 'only 1 dimension value is allowed for property "border"'
+						pos: child.pos
+					}
+				}
+				width := pv.validate_dimension('border', child)!
+				widths = css.FourDimensions{width, width, width, width}
+			}
+			ast.Ident {
+				style := pv.validate_border_style_value('border', child)!
+				if style is css.Keyword {
+					// it's a color
+					if colors != none {
+						return ast.NodeError{
+							msg: 'only 1 color value is allowed for property "border"'
+							pos: child.pos
+						}
+					}
+					colors = css.BorderColors{style, style, style, style}
+				} else {
+					// it's a style
+					if styles != none {
+						return ast.NodeError{
+							msg: 'only 1 border-style value is allowed for property "border"'
+							pos: child.pos
+						}
+					}
+					styles = css.BorderStyles{style, style, style, style}
+				}
+			}
+			ast.Hash, ast.Function {
+				if colors != none {
+					return ast.NodeError{
+						msg: 'only 1 color value is allowed for property "border"'
+						pos: child.pos
+					}
+				}
+				color := pv.validate_single_color('border', child)!
+				colors = css.BorderColors{color, color, color, color}
+			}
+			else {}
+		}
+	}
+
+	if c := colors {
+		border.colors = c
+	}
+	if s := styles {
+		border.styles = s
+	}
+	if w := widths {
+		border.widths = w
+	}
+	return border
 }

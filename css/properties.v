@@ -19,9 +19,10 @@ pub mut:
 // https://developer.mozilla.org/en-US/docs/Web/CSS/border
 pub struct Border {
 pub mut:
-	colors BorderColors
-	styles BorderStyles
-	widths FourDimensions
+	colors   BorderColors
+	styles   BorderStyles
+	widths   FourDimensions
+	collapse Keyword = 'separate'
 }
 
 pub struct BorderColors {
