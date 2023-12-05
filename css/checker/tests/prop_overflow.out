@@ -1,0 +1,34 @@
+css/checker/tests/prop_overflow.css:3:5: error: unsupported property "overflow-z"! Check the "CAN_I_USE.md" for a list of supported properties
+    1 | 
+    2 | .invalid_property {
+    3 |     overflow-z: hidden;
+      |     ~~~~~~~~~~~~~~~~~~~
+    4 | }
+    5 |
+css/checker/tests/prop_overflow.css:7:15: error: expecting 1 or 2 values for property "overflow" not 3
+    5 | 
+    6 | .invalid_keywords_len {
+    7 |     overflow: a b c;
+      |               ~~~~~~
+    8 |     overflow-x: a b;
+    9 |     overflow-y: a b;
+css/checker/tests/prop_overflow.css:8:17: error: property "overflow-x" only expects 1 value!
+    6 | .invalid_keywords_len {
+    7 |     overflow: a b c;
+    8 |     overflow-x: a b;
+      |                 ~~~~
+    9 |     overflow-y: a b;
+   10 | }
+css/checker/tests/prop_overflow.css:9:17: error: property "overflow-y" only expects 1 value!
+    7 |     overflow: a b c;
+    8 |     overflow-x: a b;
+    9 |     overflow-y: a b;
+      |                 ~~~~
+   10 | }
+   11 |
+css/checker/tests/prop_overflow.css:13:15: error: invalid value for property "overflow"
+   11 | 
+   12 | .non-keyword {
+   13 |     overflow: 10px;
+      |               ~~~~
+   14 | }

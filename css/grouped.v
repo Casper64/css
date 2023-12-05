@@ -14,6 +14,8 @@ fn set_grouped(prop_name string, value Value, mut style_map map[string]Value) {
 		set_grouped_margin_padding(prop_name, value, mut style_map)
 	} else if prop_name.starts_with('text-') {
 		set_grouped_text(prop_name, value, mut style_map)
+	} else if prop_name.starts_with('overflow-') {
+		set_grouped_overflow(prop_name, value, mut style_map)
 	} else {
 		style_map[prop_name] = value
 	}
@@ -77,4 +79,16 @@ fn set_grouped_text(prop_name string, value Value, mut style_map map[string]Valu
 	}
 
 	style_map['text'] = txt_val
+}
+
+fn set_grouped_overflow(prop_name string, value Value, mut style_map map[string]Value) {
+	mut overflow_val := (style_map['overflow'] or { Overflow{} }) as Overflow
+
+	match prop_name {
+		'overflow-x' { overflow_val.overflow_x = value as Keyword }
+		'overflow-y' { overflow_val.overflow_y = value as Keyword }
+		else {}
+	}
+
+	style_map['overflow'] = overflow_val
 }

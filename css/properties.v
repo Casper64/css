@@ -72,3 +72,9 @@ pub mut:
 	inset         bool
 	color         ColorValue
 }
+
+pub struct Overflow {
+pub mut:
+	overflow_x Keyword = 'visible'
+	overflow_y Keyword = 'visible'
+}

@@ -66,8 +66,8 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		'block-size', 'bottom', 'column-gap', 'height', 'inline-size', 'left', 'letter-spacing',
 		'line-height', 'max-height', 'max-width', 'min-height', 'min-width', 'order', 'orphans',
-		'perspective', 'right', 'row-gap', 'tab-size', 'text-indent', 'top', 'widows', 'width',
-		'word-spacing', 'z-index' {
+		'perspective', 'right', 'row-gap', 'tab-size', 'text-indent', 'top', 'vertical-align',
+		'widows', 'width', 'word-spacing', 'z-index' {
 			return pv.validate_single_dimension_prop(property, raw_value)!
 		}
 		'opacity' {
@@ -81,13 +81,13 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		// TODO: these values aren't used that often, check if it's faster to match them at the end of the `else` clause
 		'align-content', 'align-items', 'align-self', 'all', 'appearance', 'backface-visibility',
-		'caption-side', 'clear', 'cursor', 'direction', 'display', 'empty-cells', 'float',
-		'forced-color-adjust', 'isolation', 'justify-content', 'justify-items', 'justify-self',
-		'mix-blend-mode', 'object-fit', 'pointer-events', 'position', 'print-color-adjust',
-		'resize', 'scroll-behavior', 'table-layout', 'text-align', 'text-align-last',
-		'text-justify', 'text-rendering', 'text-transform', 'text-wrap', 'touch-action',
-		'unicode-bidi', 'user-select', 'vertical-align', 'visibility', 'white-space', 'word-break',
-		'word-wrap', 'writing-mode' {
+		'box-sizing', 'caption-side', 'clear', 'cursor', 'direction', 'display', 'empty-cells',
+		'float', 'forced-color-adjust', 'isolation', 'justify-content', 'justify-items',
+		'justify-self', 'mix-blend-mode', 'object-fit', 'overflow-x', 'overflow-y',
+		'pointer-events', 'position', 'print-color-adjust', 'resize', 'scroll-behavior',
+		'table-layout', 'text-align', 'text-align-last', 'text-justify', 'text-rendering',
+		'text-transform', 'text-wrap', 'touch-action', 'unicode-bidi', 'user-select', 'visibility',
+		'white-space', 'word-break', 'word-wrap', 'writing-mode' {
 			return pv.validate_single_keyword_prop(property, raw_value)!
 		}
 		'text-overflow' {
@@ -95,6 +95,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		'text-combine-upright' {
 			return pv.validate_text_combine_upright(raw_value)!
+		}
+		'overflow' {
+			return pv.validate_overflow(raw_value)!
 		}
 		else {
 			// handle properties with similair endings / starts
@@ -474,7 +477,7 @@ pub fn (pv &PropertyValidator) validate_text_combine_upright(raw_value ast.Value
 	}
 }
 
-pub fn (pv &PropertyValidator) validate_shadow(prop_name string, raw_value ast.Value) !css.ShadowValue {
+pub fn (pv &PropertyValidator) validate_shadow(prop_name string, raw_value ast.Value) !css.Value {
 	if raw_value.children.len == 1 {
 		keyword_child := raw_value.children[0]
 		if keyword_child is ast.Ident {
@@ -510,12 +513,22 @@ pub fn (pv &PropertyValidator) validate_shadow(prop_name string, raw_value ast.V
 					}
 				}
 			}
-			ast.Dimension {
+			ast.Dimension, ast.Number {
 				dimension_values << pv.validate_dimension(prop_name, child)!
 			}
 			ast.Function {
 				// the value is a color
 				// TODO: calc functions?
+				if color_value != none {
+					return ast.NodeError{
+						msg: 'only 1 color is allowed for property "${prop_name}"'
+						pos: child.pos
+					}
+				} else {
+					color_value = pv.validate_single_color(prop_name, child)!
+				}
+			}
+			ast.Hash {
 				if color_value != none {
 					return ast.NodeError{
 						msg: 'only 1 color is allowed for property "${prop_name}"'
@@ -562,4 +575,33 @@ pub fn (pv &PropertyValidator) validate_shadow(prop_name string, raw_value ast.V
 	}
 
 	return shadow
+}
+
+pub fn (pv &PropertyValidator) validate_overflow(raw_value ast.Value) !css.Overflow {
+	mut keywords := []string{}
+
+	for child in raw_value.children {
+		match child {
+			ast.Ident {
+				keywords << child.name
+			}
+			else {
+				return ast.NodeError{
+					msg: 'invalid value for property "overflow"'
+					pos: child.pos()
+				}
+			}
+		}
+	}
+
+	if keywords.len > 2 {
+		return ast.NodeError{
+			msg: 'expecting 1 or 2 values for property "overflow" not ${keywords.len}'
+			pos: raw_value.pos
+		}
+	} else if keywords.len == 2 {
+		return css.Overflow{keywords[0], keywords[1]}
+	} else {
+		return css.Overflow{keywords[0], keywords[0]}
+	}
 }

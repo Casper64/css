@@ -1,0 +1,14 @@
+
+.invalid_property {
+    overflow-z: hidden;
+}
+
+.invalid_keywords_len {
+    overflow: a b c;
+    overflow-x: a b;
+    overflow-y: a b;
+}
+
+.non-keyword {
+    overflow: 10px;
+}

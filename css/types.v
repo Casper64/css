@@ -26,7 +26,8 @@ pub type Value = AlphaValue
 	| Image
 	| Keyword
 	| MarginPadding
-	| ShadowValue
+	| Overflow
+	| Shadow
 	| Text
 	| TextCombineUpright
 	| TextEllipsis

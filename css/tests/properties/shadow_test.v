@@ -10,7 +10,7 @@ fn test_shadow_keyword() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'box-shadow': css.ShadowValue(css.Keyword('none'))
+		'box-shadow': css.Keyword('none')
 	}
 }
 
@@ -19,7 +19,7 @@ fn test_two_lengths() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'box-shadow': css.ShadowValue(css.Shadow{
+		'box-shadow': css.Shadow{
 			offset_x: datatypes.Length{
 				amount: 2
 				unit: .px
@@ -29,7 +29,7 @@ fn test_two_lengths() {
 				unit: .px
 			}
 			color: 'red'
-		})
+		}
 	}
 }
 
@@ -39,7 +39,7 @@ fn test_three_lengths() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'box-shadow': css.ShadowValue(css.Shadow{
+		'box-shadow': css.Shadow{
 			offset_x: datatypes.Length{
 				amount: 2
 				unit: .px
@@ -53,7 +53,7 @@ fn test_three_lengths() {
 				unit: .px
 			}
 			color: 'red'
-		})
+		}
 	}
 }
 
@@ -63,7 +63,7 @@ fn test_four_lengths() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'box-shadow': css.ShadowValue(css.Shadow{
+		'box-shadow': css.Shadow{
 			offset_x: datatypes.Length{
 				amount: 2
 				unit: .px
@@ -81,7 +81,7 @@ fn test_four_lengths() {
 				unit: .em
 			}
 			color: 'red'
-		})
+		}
 	}
 }
 
@@ -91,7 +91,7 @@ fn test_inset() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'box-shadow': css.ShadowValue(css.Shadow{
+		'box-shadow': css.Shadow{
 			inset: true
 			offset_x: datatypes.Length{
 				amount: 2
@@ -102,7 +102,7 @@ fn test_inset() {
 				unit: .px
 			}
 			color: 'red'
-		})
+		}
 	}
 }
 
@@ -112,7 +112,7 @@ fn test_all() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'box-shadow': css.ShadowValue(css.Shadow{
+		'box-shadow': css.Shadow{
 			inset: true
 			offset_x: datatypes.Length{
 				amount: 2
@@ -133,6 +133,6 @@ fn test_all() {
 			color: datatypes.Color{
 				a: u8(255 * 0.2)
 			}
-		})
+		}
 	}
 }

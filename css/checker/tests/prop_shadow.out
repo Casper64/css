@@ -1,25 +1,25 @@
-css/checker/tests/shadow.css:3:17: error: expecting 0, 2, 3 or 4 length values for property "box-shadow" not 1
+css/checker/tests/prop_shadow.css:3:17: error: expecting 0, 2, 3 or 4 length values for property "box-shadow" not 1
     1 | 
     2 | .invalid_length_values {
     3 |     box-shadow: 10px red;
       |                 ~~~~~~~~~
     4 |     box-shadow: 1px 2px 3px 4px 5px red;
     5 | }
-css/checker/tests/shadow.css:4:17: error: expecting 0, 2, 3 or 4 length values for property "box-shadow" not 5
+css/checker/tests/prop_shadow.css:4:17: error: expecting 0, 2, 3 or 4 length values for property "box-shadow" not 5
     2 | .invalid_length_values {
     3 |     box-shadow: 10px red;
     4 |     box-shadow: 1px 2px 3px 4px 5px red;
       |                 ~~~~~~~~~~~~~~~~~~~~~~~~
     5 | }
     6 |
-css/checker/tests/shadow.css:8:17: error: a shadow property must specify a color!
+css/checker/tests/prop_shadow.css:8:17: error: a shadow property must specify a color!
     6 | 
     7 | .no-color {
     8 |     box-shadow: 10px 20px;
       |                 ~~~~~~~~~~
     9 | }
    10 |
-css/checker/tests/shadow.css:12:23: error: keyword "inset" is already used
+css/checker/tests/prop_shadow.css:12:23: error: keyword "inset" is already used
    10 | 
    11 | .multiple-keywords {
    12 |     box-shadow: inset inset 10px 20px red;
