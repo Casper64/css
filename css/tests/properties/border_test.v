@@ -148,3 +148,27 @@ fn test_border_style_merged() {
 		}
 	}
 }
+
+fn test_border_width_merged() {
+	rules := css_util.parse_stylesheet_from_text('.t { border-width: 10px; border-top-width: 20px; border-right-width: 30px; }',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			widths: css.FourDimensions{datatypes.Length{
+				amount: 20
+				unit: .px
+			}, datatypes.Length{
+				amount: 30
+				unit: .px
+			}, datatypes.Length{
+				amount: 10
+				unit: .px
+			}, datatypes.Length{
+				amount: 10
+				unit: .px
+			}}
+		}
+	}
+}

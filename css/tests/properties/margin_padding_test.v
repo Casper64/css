@@ -11,13 +11,13 @@ fn test_single_dimensions() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'padding': css.MarginPadding{
+		'padding': css.FourDimensions{
 			left: datatypes.Length{
 				amount: 100
 				unit: .vw
 			}
 		}
-		'margin':  css.MarginPadding{
+		'margin':  css.FourDimensions{
 			right: datatypes.Percentage(0.2)
 		}
 	}
@@ -29,7 +29,7 @@ fn test_grouped_4() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'padding': css.Value(css.MarginPadding{
+		'padding': css.Value(css.FourDimensions{
 			top: css.DimensionValue(datatypes.Length{
 				amount: 10
 				unit: .px
@@ -55,7 +55,7 @@ fn test_grouped_3() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'padding': css.Value(css.MarginPadding{
+		'padding': css.Value(css.FourDimensions{
 			top: css.DimensionValue(datatypes.Length{
 				amount: 10
 				unit: .px
@@ -81,7 +81,7 @@ fn test_grouped_2() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'padding': css.Value(css.MarginPadding{
+		'padding': css.Value(css.FourDimensions{
 			top: css.DimensionValue(datatypes.Length{
 				amount: 10
 				unit: .px
@@ -107,7 +107,7 @@ fn test_grouped_1() {
 	styles := rules.get_styles()
 
 	assert styles == {
-		'padding': css.Value(css.MarginPadding{
+		'padding': css.Value(css.FourDimensions{
 			top: css.DimensionValue(datatypes.Length{
 				amount: 10
 				unit: .px

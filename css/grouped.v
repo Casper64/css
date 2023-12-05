@@ -42,7 +42,7 @@ fn set_grouped_background(prop_name string, value Value, mut style_map map[strin
 fn set_grouped_margin_padding(prop_name string, value Value, mut style_map map[string]Value) {
 	// extract "padding" from "padding-left"
 	short_name := prop_name.all_before('-')
-	mut mgpd_val := (style_map[short_name] or { MarginPadding{} }) as MarginPadding
+	mut mgpd_val := (style_map[short_name] or { FourDimensions{} }) as FourDimensions
 
 	match prop_name.all_after('-') {
 		'top' {
@@ -106,13 +106,15 @@ fn set_grouped_border(prop_name string, value Value, mut style_map map[string]Va
 			border_val.styles = value as BorderStyles
 		}
 		'border-width' {
-			border_val.width = value as DimensionValue
+			border_val.widths = value as FourDimensions
 		}
 		else {
 			if prop_name.ends_with('-color') {
 				border_val.colors = get_grouped_border_color(prop_name, value, style_map)
 			} else if prop_name.ends_with('-style') {
 				border_val.styles = get_grouped_border_style(prop_name, value, style_map)
+			} else if prop_name.ends_with('-width') {
+				border_val.widths = get_grouped_border_width(prop_name, value, style_map)
 			}
 		}
 	}
@@ -152,4 +154,21 @@ fn get_grouped_border_style(prop_name string, value Value, style_map map[string]
 	}
 
 	return bstyle_val
+}
+
+fn get_grouped_border_width(prop_name string, value Value, style_map map[string]Value) FourDimensions {
+	mut bwidth_val := FourDimensions{}
+	if v := style_map['border'] {
+		bwidth_val = (v as Border).widths
+	}
+
+	match prop_name {
+		'border-top-width' { bwidth_val.top = value as DimensionValue }
+		'border-right-width' { bwidth_val.right = value as DimensionValue }
+		'border-bottom-width' { bwidth_val.bottom = value as DimensionValue }
+		'border-left-width' { bwidth_val.left = value as DimensionValue }
+		else {}
+	}
+
+	return bwidth_val
 }

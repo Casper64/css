@@ -73,7 +73,7 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		'opacity' {
 			return pv.validate_alpha_value_prop(property, raw_value)!
 		}
-		'padding', 'margin' {
+		'padding', 'margin', 'border-width' {
 			return pv.validate_4_dim_value_prop(property, raw_value)!
 		}
 		'content' {
@@ -114,11 +114,15 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 				return pv.validate_single_color_prop(property, raw_value)!
 			} else if property.starts_with('margin-') || property.starts_with('padding-') {
 				// for properties like `margin-left`, or `padding-top`
-				return pv.valditate_margin_padding(property, raw_value)!
+				return pv.valditate_4dim_prop(property, raw_value)!
 			} else if property.ends_with('-shadow') {
 				return pv.validate_shadow(property, raw_value)!
-			} else if property.ends_with('-style') && property.starts_with('border-') {
-				return pv.validate_single_border_style(property, raw_value)!
+			} else if property.starts_with('border-') {
+				if property.ends_with('-style') {
+					return pv.validate_single_border_style(property, raw_value)!
+				} else if property.ends_with('-width') {
+					return pv.validate_single_dimension_prop(property, raw_value)!
+				}
 			}
 		}
 	}
@@ -318,7 +322,7 @@ pub fn (pv &PropertyValidator) validate_alpha_value_prop(prop_name string, raw_v
 	return v
 }
 
-pub fn (pv &PropertyValidator) valditate_margin_padding(prop_name string, raw_value ast.Value) !css.Value {
+pub fn (pv &PropertyValidator) valditate_4dim_prop(prop_name string, raw_value ast.Value) !css.Value {
 	if four_dim_endings.any(fn [prop_name] (ending string) bool {
 		return prop_name.ends_with(ending)
 	})
@@ -329,7 +333,7 @@ pub fn (pv &PropertyValidator) valditate_margin_padding(prop_name string, raw_va
 	return error(pv.unsupported_property(prop_name))
 }
 
-pub fn (pv &PropertyValidator) validate_4_dim_value_prop(prop_name string, raw_value ast.Value) !css.MarginPadding {
+pub fn (pv &PropertyValidator) validate_4_dim_value_prop(prop_name string, raw_value ast.Value) !css.FourDimensions {
 	if raw_value.children.len > 4 {
 		return ast.NodeError{
 			msg: 'property "${prop_name}" can have a maximum of 4 values'
@@ -346,13 +350,13 @@ pub fn (pv &PropertyValidator) validate_4_dim_value_prop(prop_name string, raw_v
 	}
 
 	if vals.len == 1 {
-		return css.MarginPadding{vals[0], vals[0], vals[0], vals[0]}
+		return css.FourDimensions{vals[0], vals[0], vals[0], vals[0]}
 	} else if vals.len == 2 {
-		return css.MarginPadding{vals[0], vals[1], vals[0], vals[1]}
+		return css.FourDimensions{vals[0], vals[1], vals[0], vals[1]}
 	} else if vals.len == 3 {
-		return css.MarginPadding{vals[0], vals[1], vals[2], vals[1]}
+		return css.FourDimensions{vals[0], vals[1], vals[2], vals[1]}
 	} else {
-		return css.MarginPadding{vals[0], vals[1], vals[2], vals[3]}
+		return css.FourDimensions{vals[0], vals[1], vals[2], vals[3]}
 	}
 }
 

@@ -21,7 +21,7 @@ pub struct Border {
 pub mut:
 	colors BorderColors
 	styles BorderStyles
-	width  DimensionValue = css.zero_px
+	widths FourDimensions
 }
 
 pub struct BorderColors {
@@ -40,9 +40,9 @@ pub mut:
 	left   BorderLineStyle = datatypes.LineStyle.@none
 }
 
-// collection of properties for `margin` and `padding`:
+// For properties like `margin` and `padding` that can have 4 dimensions values
 // https://developer.mozilla.org/en-US/docs/Web/CSS/margin
-pub struct MarginPadding {
+pub struct FourDimensions {
 pub mut:
 	top    DimensionValue = css.zero_px
 	right  DimensionValue = css.zero_px

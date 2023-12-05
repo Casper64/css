@@ -25,10 +25,10 @@ pub type Value = AlphaValue
 	| BorderStyles
 	| ColorValue
 	| DimensionValue
+	| FourDimensions
 	| Gradient
 	| Image
 	| Keyword
-	| MarginPadding
 	| Overflow
 	| Shadow
 	| Text
