@@ -1,0 +1,20 @@
+css/checker/tests/prop_border.css:3:19: error: property "border-color" can have a maximum of 4 values!
+    1 | 
+    2 | .nr_values {
+    3 |     border-color: red green blue black orange;
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    4 |     border-top-color: green red;
+    5 | }
+css/checker/tests/prop_border.css:4:23: error: property "border-top-color" only expects 1 value!
+    2 | .nr_values {
+    3 |     border-color: red green blue black orange;
+    4 |     border-top-color: green red;
+      |                       ~~~~~~~~~~
+    5 | }
+    6 |
+css/checker/tests/prop_border.css:8:19: error: invalid value for property "border-color"!
+    6 | 
+    7 | .invalid_values {
+    8 |     border-color: 10px;
+      |                   ~~~~
+    9 | }

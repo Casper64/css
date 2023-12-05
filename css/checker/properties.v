@@ -99,6 +99,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		'overflow' {
 			return pv.validate_overflow(raw_value)!
 		}
+		'border-color' {
+			return pv.validate_border_color(raw_value)!
+		}
 		else {
 			// handle properties with similair endings / starts
 			if property.starts_with('background') {
@@ -603,5 +606,28 @@ pub fn (pv &PropertyValidator) validate_overflow(raw_value ast.Value) !css.Overf
 		return css.Overflow{keywords[0], keywords[1]}
 	} else {
 		return css.Overflow{keywords[0], keywords[0]}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_border_color(raw_value ast.Value) !css.BorderColors {
+	mut vals := []css.ColorValue{}
+
+	for child in raw_value.children {
+		vals << pv.validate_single_color('border-color', child)!
+	}
+
+	if vals.len == 1 {
+		return css.BorderColors{vals[0], vals[0], vals[0], vals[0]}
+	} else if vals.len == 2 {
+		return css.BorderColors{vals[0], vals[1], vals[0], vals[1]}
+	} else if vals.len == 3 {
+		return css.BorderColors{vals[0], vals[1], vals[2], vals[1]}
+	} else if vals.len == 4 {
+		return css.BorderColors{vals[0], vals[1], vals[2], vals[3]}
+	} else {
+		return ast.NodeError{
+			msg: 'property "border-color" can have a maximum of 4 values!'
+			pos: raw_value.pos
+		}
 	}
 }

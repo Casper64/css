@@ -20,6 +20,8 @@ pub type Image = Gradient | Keyword | Url
 pub type Value = AlphaValue
 	| Background
 	| Border
+	| BorderColors
+	| BorderStyles
 	| ColorValue
 	| DimensionValue
 	| Gradient
@@ -339,3 +341,5 @@ pub type TextEllipsis = string
 pub type TextOverflow = Keyword | TextEllipsis
 
 pub type ShadowValue = Keyword | Shadow
+
+pub type BorderLineStyle = Keyword | datatypes.LineStyle

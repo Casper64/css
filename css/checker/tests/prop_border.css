@@ -1,0 +1,9 @@
+
+.nr_values {
+    border-color: red green blue black orange;
+    border-top-color: green red;
+}
+
+.invalid_values {
+    border-color: 10px;
+}

@@ -19,9 +19,25 @@ pub mut:
 // https://developer.mozilla.org/en-US/docs/Web/CSS/border
 pub struct Border {
 pub mut:
-	color ColorValue
-	style datatypes.LineStyle
-	width DimensionValue
+	colors BorderColors
+	styles BorderStyles
+	width  DimensionValue = css.zero_px
+}
+
+pub struct BorderColors {
+pub mut:
+	top    ?ColorValue
+	right  ?ColorValue
+	bottom ?ColorValue
+	left   ?ColorValue
+}
+
+pub struct BorderStyles {
+pub mut:
+	top    BorderLineStyle
+	right  BorderLineStyle
+	bottom BorderLineStyle
+	left   BorderLineStyle
 }
 
 // collection of properties for `margin` and `padding`:
