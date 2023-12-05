@@ -8,6 +8,7 @@ import css.token
 
 // Validator is an interface which you can extend to check any custom properties
 pub interface Validator {
+mut:
 	validate_property(string, ast.Value) !css.Value
 }
 
@@ -21,6 +22,8 @@ pub struct PropertyValidator {
 	get_details    fn () string = unsafe { nil }
 	warn_with_pos  fn (string, token.Pos) = unsafe { nil }
 	error_with_pos fn (string, token.Pos) ast.NodeError = unsafe { nil }
+pub mut:
+	variables map[string]ast.Value
 }
 
 pub fn (pv &PropertyValidator) unsupported_property(property string) string {
@@ -33,7 +36,11 @@ pub fn validate(tree &ast.StyleSheet, mut table ast.Table, prefs &pref.Preferenc
 		prefs: prefs
 		table: table
 		rules: []css.Rule{cap: tree.rules.len}
+		// tmp_declarations: []map[string]css.RawValue{len: table.rules.len}
 	}
+
+	// table.sort_rules()
+
 	checker.validator = checker.make_property_validator()
 
 	checker.validate(tree)
@@ -52,6 +59,7 @@ pub struct Checker {
 mut:
 	error_details []string
 	validator     Validator @[noinit]
+	// tmp_declarations []map[string]css.RawValue
 pub mut:
 	table       &ast.Table = unsafe { nil }
 	has_errored bool
@@ -72,6 +80,7 @@ pub fn (mut c Checker) sort_rules() {
 }
 
 pub fn (mut c Checker) validate(tree &ast.StyleSheet) {
+	// TODO: first sort rules by selector so the CSS variables can be replaced correctly, maybe do this in the parser??
 	for rule in tree.rules {
 		match rule {
 			ast.Rule {
@@ -88,6 +97,18 @@ pub fn (mut c Checker) validate(tree &ast.StyleSheet) {
 			else {}
 		}
 	}
+	// TODO: @keyframes rule
+	// for rule_node in c.table.rules {
+	// 	if rule := c.validate_rule(rule_node) {
+	// 		c.rules << rule
+	// 	} else {
+	// 		if err is ast.NodeError {
+	// 			c.error_with_pos(err.msg, err.pos)
+	// 		} else {
+	// 			c.error(err.msg())
+	// 		}
+	// 	}
+	// }
 }
 
 pub fn (mut c Checker) get_details() string {

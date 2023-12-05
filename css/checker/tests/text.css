@@ -1,0 +1,14 @@
+
+.text-overflow {
+    text-overflow: a b c;
+    text-overflow: other "[..]";
+    text-overflow: ellipsis "[..]";
+    text-overflow: 10px;
+}
+
+.text-combine-upright {
+    text-combine-upright: a b c;
+    text-combine-upright: all 5;
+    text-combine-upright: digits 4;
+    text-combine-upright: "say what";
+}

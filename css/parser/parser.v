@@ -243,11 +243,7 @@ pub fn (mut p Parser) block_decl() ast.Rule {
 	// skip '}'
 	p.next()
 
-	// for selector in prelude.children {
-	// 	if selector is ast.Selector {
-	// 		p.table.insert_declarations(selector, declarations)
-	// 	}
-	// }
+	// p.table.insert_rule(prelude.children, declarations)
 
 	return rule
 }

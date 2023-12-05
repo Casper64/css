@@ -32,7 +32,9 @@ pub fn (mut c Checker) validate_declarations(declarations []ast.Node) map[string
 					if err is ast.NodeError {
 						c.error_with_pos(err.msg(), err.pos)
 					} else {
-						c.error_with_pos(err.msg(), decl.pos)
+						if err.msg() != 'variable' {
+							c.error_with_pos(err.msg(), decl.pos)
+						}
 					}
 				}
 			}
@@ -48,14 +50,24 @@ pub fn (mut c Checker) validate_declarations(declarations []ast.Node) map[string
 	return style_map
 }
 
-pub fn (pv &PropertyValidator) validate_property(property string, raw_value ast.Value) !css.Value {
+pub fn (mut pv PropertyValidator) validate_property(property string, raw_value ast.Value) !css.Value {
+	// CSS variable
+	if property.starts_with('--') {
+		// return css.Variable{
+		// 	name: property
+		// 	value: raw_value
+		// }
+		pv.variables[property] = raw_value
+		return error('variable')
+	}
 	match property {
 		'color' {
 			return pv.validate_single_color_prop(property, raw_value)!
 		}
-		'bottom', 'height', 'left', 'letter-spacing', 'line-height', 'max-height', 'max-width',
-		'min-height', 'min-width', 'right', 'text-indent', 'top', 'width', 'word-spacing',
-		'z-index' {
+		'block-size', 'bottom', 'column-gap', 'height', 'inline-size', 'left', 'letter-spacing',
+		'line-height', 'max-height', 'max-width', 'min-height', 'min-width', 'order', 'orphans',
+		'perspective', 'right', 'row-gap', 'tab-size', 'text-indent', 'top', 'widows', 'width',
+		'word-spacing', 'z-index' {
 			return pv.validate_single_dimension_prop(property, raw_value)!
 		}
 		'opacity' {
@@ -68,12 +80,21 @@ pub fn (pv &PropertyValidator) validate_property(property string, raw_value ast.
 			return pv.validate_single_string(property, raw_value)!
 		}
 		// TODO: these values aren't used that often, check if it's faster to match them at the end of the `else` clause
-		'align-content', 'align-items', 'align-self', 'all', 'backface-visibility', 'cursor',
-		'display', 'float', 'justify-content', 'justify-items', 'justify-self', 'pointer-events',
-		'position', 'scroll-behavior', 'text-justify', 'text-overflow', 'text-transform',
-		'user-select', 'vertical-align', 'visibility', 'white-space', 'word-break', 'word-wrap',
-		'writing-mode' {
+		'align-content', 'align-items', 'align-self', 'all', 'appearance', 'backface-visibility',
+		'caption-side', 'clear', 'cursor', 'direction', 'display', 'empty-cells', 'float',
+		'forced-color-adjust', 'isolation', 'justify-content', 'justify-items', 'justify-self',
+		'mix-blend-mode', 'object-fit', 'pointer-events', 'position', 'print-color-adjust',
+		'resize', 'scroll-behavior', 'table-layout', 'text-align', 'text-align-last',
+		'text-justify', 'text-rendering', 'text-transform', 'text-wrap', 'touch-action',
+		'unicode-bidi', 'user-select', 'vertical-align', 'visibility', 'white-space', 'word-break',
+		'word-wrap', 'writing-mode' {
 			return pv.validate_single_keyword_prop(property, raw_value)!
+		}
+		'text-overflow' {
+			return pv.validate_text_overflow(raw_value)!
+		}
+		'text-combine-upright' {
+			return pv.validate_text_combine_upright(raw_value)!
 		}
 		else {
 			// handle properties with similair endings / starts
@@ -85,6 +106,8 @@ pub fn (pv &PropertyValidator) validate_property(property string, raw_value ast.
 			} else if property.starts_with('margin-') || property.starts_with('padding-') {
 				// for properties like `margin-left`, or `padding-top`
 				return pv.valditate_margin_padding(property, raw_value)!
+			} else if property.ends_with('-shadow') {
+				return pv.validate_shadow(property, raw_value)!
 			}
 		}
 	}
@@ -121,6 +144,10 @@ pub fn (pv &PropertyValidator) validate_single_color_prop(property_name string, 
 	}
 
 	color_value := raw_value.children[0]
+	return pv.validate_single_color(property_name, color_value)
+}
+
+pub fn (pv &PropertyValidator) validate_single_color(property_name string, color_value ast.Node) !css.ColorValue {
 	match color_value {
 		ast.Ident {
 			// named color or keyword
@@ -147,7 +174,7 @@ pub fn (pv &PropertyValidator) validate_single_color_prop(property_name string, 
 		else {
 			return ast.NodeError{
 				msg: 'invalid value for property "${property_name}"!'
-				pos: raw_value.pos
+				pos: color_value.pos()
 			}
 		}
 	}
@@ -182,6 +209,10 @@ pub fn (pv &PropertyValidator) validate_single_dimension_prop(prop_name string, 
 	}
 
 	dimension_value := raw_value.children[0]
+	return pv.validate_dimension(prop_name, dimension_value)
+}
+
+pub fn (pv &PropertyValidator) validate_dimension(prop_name string, dimension_value ast.Node) !css.DimensionValue {
 	match dimension_value {
 		ast.Dimension {
 			unit := match dimension_value.unit {
@@ -226,7 +257,7 @@ pub fn (pv &PropertyValidator) validate_single_dimension_prop(prop_name string, 
 		else {
 			return ast.NodeError{
 				msg: 'invalid value for property "${prop_name}"!'
-				pos: raw_value.pos
+				pos: dimension_value.pos()
 			}
 		}
 	}
@@ -362,3 +393,173 @@ pub fn (pv &PropertyValidator) validate_background(prop_name string, raw_value a
 }
 
 // pub fn (pv &PropertyValidator) validate_background_position(raw_value ast.Value)
+
+pub fn (pv &PropertyValidator) validate_text_overflow(raw_value ast.Value) !css.TextOverflow {
+	if raw_value.children.len > 2 {
+		return ast.NodeError{
+			msg: 'property "text-overflow" can have 1 or 2 values'
+			pos: raw_value.pos
+		}
+	}
+
+	mut keyword := ''
+	first_val := raw_value.children[0]
+
+	if first_val is ast.Ident {
+		keyword = first_val.name
+	} else {
+		return ast.NodeError{
+			msg: 'expecting a keyword'
+			pos: first_val.pos()
+		}
+	}
+
+	if raw_value.children.len == 1 {
+		return css.Keyword(keyword)
+	} else if keyword != 'ellipsis' {
+		return ast.NodeError{
+			msg: 'only the keyword "ellipsis" can have a second value for property "text-overflow"'
+			pos: raw_value.pos
+		}
+	} else {
+		ellipsis_child := raw_value.children[1]
+		if ellipsis_child is ast.String {
+			return css.TextEllipsis(ellipsis_child.value)
+		} else {
+			return ast.NodeError{
+				msg: 'expecting a string'
+				pos: ellipsis_child.pos()
+			}
+		}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_text_combine_upright(raw_value ast.Value) !css.TextCombineUpright {
+	if raw_value.children.len > 2 {
+		return ast.NodeError{
+			msg: 'property "text-combine-upright" can have 1 or 2 values'
+			pos: raw_value.pos
+		}
+	}
+
+	mut keyword := ''
+	first_val := raw_value.children[0]
+
+	if first_val is ast.Ident {
+		keyword = first_val.name
+	} else {
+		return ast.NodeError{
+			msg: 'expecting a keyword'
+			pos: first_val.pos()
+		}
+	}
+
+	if raw_value.children.len == 1 {
+		return css.Keyword(keyword)
+	} else if keyword != 'digits' {
+		return ast.NodeError{
+			msg: 'only the keyword "digits" can have a second value for property "text-combine-upright"'
+			pos: raw_value.pos
+		}
+	} else {
+		digit_child := raw_value.children[1]
+		if digit_child is ast.Number {
+			return css.TextCombineUprightDigits(digit_child.value.int())
+		} else {
+			return ast.NodeError{
+				msg: 'expecting a number'
+				pos: digit_child.pos()
+			}
+		}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_shadow(prop_name string, raw_value ast.Value) !css.ShadowValue {
+	if raw_value.children.len == 1 {
+		keyword_child := raw_value.children[0]
+		if keyword_child is ast.Ident {
+			return css.Keyword(keyword_child.name)
+		}
+	}
+
+	mut shadow := css.Shadow{}
+	mut dimension_values := []css.DimensionValue{}
+	mut color_value := ?css.ColorValue(none)
+
+	for child in raw_value.children {
+		match child {
+			ast.Ident {
+				if child.name == 'inset' {
+					if shadow.inset {
+						return ast.NodeError{
+							msg: 'keyword "inset" is already used'
+							pos: child.pos
+						}
+					} else {
+						shadow.inset = true
+					}
+				} else {
+					// the value is a color
+					if color_value != none {
+						return ast.NodeError{
+							msg: 'only 1 color is allowed for property "${prop_name}"'
+							pos: child.pos
+						}
+					} else {
+						color_value = child.name
+					}
+				}
+			}
+			ast.Dimension {
+				dimension_values << pv.validate_dimension(prop_name, child)!
+			}
+			ast.Function {
+				// the value is a color
+				// TODO: calc functions?
+				if color_value != none {
+					return ast.NodeError{
+						msg: 'only 1 color is allowed for property "${prop_name}"'
+						pos: child.pos
+					}
+				} else {
+					color_value = pv.validate_single_color(prop_name, child)!
+				}
+			}
+			else {
+				return ast.NodeError{
+					msg: 'invalid value for property "${prop_name}"!'
+					pos: child.pos()
+				}
+			}
+		}
+	}
+
+	if color := color_value {
+		shadow.color = color
+	} else {
+		return ast.NodeError{
+			msg: 'a shadow property must specify a color!'
+			pos: raw_value.pos
+		}
+	}
+
+	if dimension_values.len == 1 || dimension_values.len > 4 {
+		return ast.NodeError{
+			msg: 'expecting 0, 2, 3 or 4 length values for property "${prop_name}" not ${dimension_values.len}'
+			pos: raw_value.pos
+		}
+	}
+
+	if dimension_values.len >= 2 {
+		shadow.offset_x = dimension_values[0]
+		shadow.offset_y = dimension_values[1]
+	}
+	if dimension_values.len >= 3 {
+		shadow.blur_radius = dimension_values[2]
+	}
+	if dimension_values.len == 4 {
+		shadow.spread_radius = dimension_values[3]
+	}
+
+	return shadow
+}

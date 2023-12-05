@@ -1,0 +1,41 @@
+css/checker/tests/text.css:3:20: error: property "text-overflow" can have 1 or 2 values
+    1 | 
+    2 | .text-overflow {
+    3 |     text-overflow: a b c;
+      |                    ~~~~~~
+    4 |     text-overflow: other "[..]";
+    5 |     text-overflow: ellipsis "[..]";
+css/checker/tests/text.css:4:20: error: only the keyword "ellipsis" can have a second value for property "text-overflow"
+    2 | .text-overflow {
+    3 |     text-overflow: a b c;
+    4 |     text-overflow: other "[..]";
+      |                    ~~~~~~~~~~~~~
+    5 |     text-overflow: ellipsis "[..]";
+    6 |     text-overflow: 10px;
+css/checker/tests/text.css:6:20: error: expecting a keyword
+    4 |     text-overflow: other "[..]";
+    5 |     text-overflow: ellipsis "[..]";
+    6 |     text-overflow: 10px;
+      |                    ~~~~
+    7 | }
+    8 |
+css/checker/tests/text.css:10:27: error: property "text-combine-upright" can have 1 or 2 values
+    8 | 
+    9 | .text-combine-upright {
+   10 |     text-combine-upright: a b c;
+      |                           ~~~~~~
+   11 |     text-combine-upright: all 5;
+   12 |     text-combine-upright: digits 4;
+css/checker/tests/text.css:11:27: error: only the keyword "digits" can have a second value for property "text-combine-upright"
+    9 | .text-combine-upright {
+   10 |     text-combine-upright: a b c;
+   11 |     text-combine-upright: all 5;
+      |                           ~~~~~~
+   12 |     text-combine-upright: digits 4;
+   13 |     text-combine-upright: "say what";
+css/checker/tests/text.css:13:27: error: expecting a keyword
+   11 |     text-combine-upright: all 5;
+   12 |     text-combine-upright: digits 4;
+   13 |     text-combine-upright: "say what";
+      |                           ~~~~~~~~~~
+   14 | }

@@ -45,3 +45,30 @@ pub struct GradientValue {
 	color ColorValue
 	size  ?DimensionValue
 }
+
+pub struct Text {
+pub mut:
+	align           ?string
+	align_last      ?string
+	combine_upright ?TextCombineUpright
+	// decoration
+	// emphasis
+	indent      ?DimensionValue
+	justify     ?string
+	orientation ?string
+	overflow    ?TextOverflow
+	rendering   ?string
+	shadow      []Shadow
+	transform   ?string
+	wrap        ?string
+}
+
+pub struct Shadow {
+pub mut:
+	offset_x      DimensionValue
+	offset_y      DimensionValue
+	blur_radius   DimensionValue = css.zero_px
+	spread_radius DimensionValue = css.zero_px
+	inset         bool
+	color         ColorValue
+}

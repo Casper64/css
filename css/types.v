@@ -26,6 +26,11 @@ pub type Value = AlphaValue
 	| Image
 	| Keyword
 	| MarginPadding
+	| ShadowValue
+	| Text
+	| TextCombineUpright
+	| TextEllipsis
+	| TextOverflow
 	| string
 
 pub struct Attribute {
@@ -324,3 +329,12 @@ pub fn (rules []Rule) get_styles() map[string]Value {
 
 	return styles
 }
+
+pub type TextCombineUprightDigits = int
+pub type TextCombineUpright = Keyword | TextCombineUprightDigits
+
+// text-overflow: ellipsis "[..]"; will become `css.TextOverflow(css.TextEllipsis('[..]'))`
+pub type TextEllipsis = string
+pub type TextOverflow = Keyword | TextEllipsis
+
+pub type ShadowValue = Keyword | Shadow

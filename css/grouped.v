@@ -12,6 +12,8 @@ fn set_grouped(prop_name string, value Value, mut style_map map[string]Value) {
 		set_grouped_background(prop_name, value, mut style_map)
 	} else if prop_name.starts_with('padding-') || prop_name.starts_with('margin-') {
 		set_grouped_margin_padding(prop_name, value, mut style_map)
+	} else if prop_name.starts_with('text-') {
+		set_grouped_text(prop_name, value, mut style_map)
 	} else {
 		style_map[prop_name] = value
 	}
@@ -55,4 +57,24 @@ fn set_grouped_margin_padding(prop_name string, value Value, mut style_map map[s
 	}
 
 	style_map[short_name] = mgpd_val
+}
+
+fn set_grouped_text(prop_name string, value Value, mut style_map map[string]Value) {
+	mut txt_val := (style_map['text'] or { Text{} }) as Text
+
+	match prop_name {
+		'text-align' { txt_val.align = value as Keyword }
+		'text-align-last' { txt_val.align_last = value as Keyword }
+		'text-combine-upright' { txt_val.combine_upright = value as TextCombineUpright }
+		'text-indent' { txt_val.indent = value as DimensionValue }
+		'text-justify' { txt_val.justify = value as Keyword }
+		'text-orientation' { txt_val.orientation = value as Keyword }
+		'text-overflow' { txt_val.overflow = value as TextOverflow }
+		'text-rendering' { txt_val.rendering = value as Keyword }
+		'text-transform' { txt_val.transform = value as Keyword }
+		'text-wrap' { txt_val.wrap = value as Keyword }
+		else {}
+	}
+
+	style_map['text'] = txt_val
 }

@@ -3,6 +3,27 @@ module checker
 import css
 import css.ast
 
+// pub fn (mut c Checker) validate_rule(rule ast.RuleNode) !css.Rule {
+// 	// TODO: make this faster??
+// 	selectors := c.validate_selector_list(rule.selector.children)!
+
+// 	if c.tmp_declarations[rule.declaration_idx].len != 0 {
+// 		return css.Rule{
+// 			specificity: css.Specificity.from_selectors(selectors)
+// 			selectors: selectors
+// 			declarations: c.tmp_declarations[rule.declaration_idx].clone()
+// 		}
+// 	} else {
+// 		decls := c.validate_declarations(c.table.raw_declarations[rule.declaration_idx])
+// 		c.tmp_declarations[rule.declaration_idx] = decls.clone()
+// 		return css.Rule{
+// 			specificity: css.Specificity.from_selectors(selectors)
+// 			selectors: selectors
+// 			declarations: decls
+// 		}
+// 	}
+// }
+
 pub fn (mut c Checker) validate_rule(rule ast.Rule) ! {
 	if rule.prelude is ast.Raw {
 		return ast.NodeError{

@@ -1,0 +1,19 @@
+
+.invalid_length_values {
+    box-shadow: 10px red;
+    box-shadow: 1px 2px 3px 4px 5px red;
+}
+
+.no-color {
+    box-shadow: 10px 20px;
+}
+
+.multiple-keywords {
+    box-shadow: inset inset 10px 20px red;
+    box-shadow: inset red 10px 20px;
+    box-shadow: inset 10px 20px red;
+}
+
+.color-functions {
+    box-shadow: inset 2px 4px 4px 8px rgba(0 0 0 / 20%);
+}
