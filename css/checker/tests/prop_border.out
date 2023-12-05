@@ -4,17 +4,38 @@ css/checker/tests/prop_border.css:3:19: error: property "border-color" can have 
     3 |     border-color: red green blue black orange;
       |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     4 |     border-top-color: green red;
-    5 | }
+    5 |
 css/checker/tests/prop_border.css:4:23: error: property "border-top-color" only expects 1 value!
     2 | .nr_values {
     3 |     border-color: red green blue black orange;
     4 |     border-top-color: green red;
       |                       ~~~~~~~~~~
-    5 | }
-    6 |
-css/checker/tests/prop_border.css:8:19: error: invalid value for property "border-color"!
-    6 | 
-    7 | .invalid_values {
-    8 |     border-color: 10px;
+    5 | 
+    6 |     border-style: dotted dashed double groove inset;
+css/checker/tests/prop_border.css:6:19: error: property "border-style" can have a maximum of 4 values!
+    4 |     border-top-color: green red;
+    5 | 
+    6 |     border-style: dotted dashed double groove inset;
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    7 |     border-top-style: dotted dashed;
+    8 | }
+css/checker/tests/prop_border.css:7:23: error: property "border-top-style" only expects 1 value!
+    5 | 
+    6 |     border-style: dotted dashed double groove inset;
+    7 |     border-top-style: dotted dashed;
+      |                       ~~~~~~~~~~~~~~
+    8 | }
+    9 |
+css/checker/tests/prop_border.css:11:19: error: invalid value for property "border-color"!
+    9 | 
+   10 | .invalid_values {
+   11 |     border-color: 10px;
       |                   ~~~~
-    9 | }
+   12 |     border-style: "wjat!!";
+   13 | }
+css/checker/tests/prop_border.css:12:19: error: invalid value for property "border-style"!
+   10 | .invalid_values {
+   11 |     border-color: 10px;
+   12 |     border-style: "wjat!!";
+      |                   ~~~~~~~~
+   13 | }

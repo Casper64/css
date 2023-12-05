@@ -34,10 +34,10 @@ pub mut:
 
 pub struct BorderStyles {
 pub mut:
-	top    BorderLineStyle
-	right  BorderLineStyle
-	bottom BorderLineStyle
-	left   BorderLineStyle
+	top    BorderLineStyle = datatypes.LineStyle.@none
+	right  BorderLineStyle = datatypes.LineStyle.@none
+	bottom BorderLineStyle = datatypes.LineStyle.@none
+	left   BorderLineStyle = datatypes.LineStyle.@none
 }
 
 // collection of properties for `margin` and `padding`:

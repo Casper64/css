@@ -2,8 +2,12 @@
 .nr_values {
     border-color: red green blue black orange;
     border-top-color: green red;
+
+    border-style: dotted dashed double groove inset;
+    border-top-style: dotted dashed;
 }
 
 .invalid_values {
     border-color: 10px;
+    border-style: "wjat!!";
 }

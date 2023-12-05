@@ -111,6 +111,8 @@ fn set_grouped_border(prop_name string, value Value, mut style_map map[string]Va
 		else {
 			if prop_name.ends_with('-color') {
 				border_val.colors = get_grouped_border_color(prop_name, value, style_map)
+			} else if prop_name.ends_with('-style') {
+				border_val.styles = get_grouped_border_style(prop_name, value, style_map)
 			}
 		}
 	}
@@ -133,4 +135,21 @@ fn get_grouped_border_color(prop_name string, value Value, style_map map[string]
 	}
 
 	return bcolor_val
+}
+
+fn get_grouped_border_style(prop_name string, value Value, style_map map[string]Value) BorderStyles {
+	mut bstyle_val := BorderStyles{}
+	if v := style_map['border'] {
+		bstyle_val = (v as Border).styles
+	}
+
+	match prop_name {
+		'border-top-style' { bstyle_val.top = value as BorderLineStyle }
+		'border-right-style' { bstyle_val.right = value as BorderLineStyle }
+		'border-bottom-style' { bstyle_val.bottom = value as BorderLineStyle }
+		'border-left-style' { bstyle_val.left = value as BorderLineStyle }
+		else {}
+	}
+
+	return bstyle_val
 }

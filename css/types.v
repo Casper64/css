@@ -21,6 +21,7 @@ pub type Value = AlphaValue
 	| Background
 	| Border
 	| BorderColors
+	| BorderLineStyle
 	| BorderStyles
 	| ColorValue
 	| DimensionValue

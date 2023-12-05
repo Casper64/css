@@ -78,3 +78,73 @@ fn test_merge_colors() {
 		}
 	}
 }
+
+fn test_border_style_keyword() {
+	rules := css_util.parse_stylesheet_from_text('.t { border-style: unset; }', preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{css.Keyword('unset'), css.Keyword('unset'), css.Keyword('unset'), css.Keyword('unset')}
+		}
+	}
+}
+
+fn test_border_style_one() {
+	rules := css_util.parse_stylesheet_from_text('.t { border-style: dotted; }', preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dotted, datatypes.LineStyle.dotted, datatypes.LineStyle.dotted, datatypes.LineStyle.dotted}
+		}
+	}
+}
+
+fn test_border_style_two() {
+	rules := css_util.parse_stylesheet_from_text('.t { border-style: dotted none; }',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dotted, datatypes.LineStyle.@none, datatypes.LineStyle.dotted, datatypes.LineStyle.@none}
+		}
+	}
+}
+
+fn test_border_style_three() {
+	rules := css_util.parse_stylesheet_from_text('.t { border-style: dotted none hidden; }',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dotted, datatypes.LineStyle.@none, datatypes.LineStyle.hidden, datatypes.LineStyle.@none}
+		}
+	}
+}
+
+fn test_border_style_four() {
+	rules := css_util.parse_stylesheet_from_text('.t { border-style: dotted none hidden ridge; }',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.dotted, datatypes.LineStyle.@none, datatypes.LineStyle.hidden, datatypes.LineStyle.ridge}
+		}
+	}
+}
+
+fn test_border_style_merged() {
+	rules := css_util.parse_stylesheet_from_text('.t { border-style: dotted; border-top-style: ridge; border-right-style: unset; }',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			styles: css.BorderStyles{datatypes.LineStyle.ridge, css.Keyword('unset'), datatypes.LineStyle.dotted, datatypes.LineStyle.dotted}
+		}
+	}
+}

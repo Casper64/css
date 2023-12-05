@@ -102,6 +102,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		'border-color' {
 			return pv.validate_border_color(raw_value)!
 		}
+		'border-style' {
+			return pv.validate_border_style(raw_value)!
+		}
 		else {
 			// handle properties with similair endings / starts
 			if property.starts_with('background') {
@@ -114,6 +117,8 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 				return pv.valditate_margin_padding(property, raw_value)!
 			} else if property.ends_with('-shadow') {
 				return pv.validate_shadow(property, raw_value)!
+			} else if property.ends_with('-style') && property.starts_with('border-') {
+				return pv.validate_single_border_style(property, raw_value)!
 			}
 		}
 	}
@@ -627,6 +632,88 @@ pub fn (pv &PropertyValidator) validate_border_color(raw_value ast.Value) !css.B
 	} else {
 		return ast.NodeError{
 			msg: 'property "border-color" can have a maximum of 4 values!'
+			pos: raw_value.pos
+		}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_single_border_style(prop_name string, raw_value ast.Value) !css.BorderLineStyle {
+	if raw_value.children.len > 1 {
+		return ast.NodeError{
+			msg: 'property "${prop_name}" only expects 1 value!'
+			pos: raw_value.pos
+		}
+	}
+
+	return pv.validate_border_style_value(prop_name, raw_value.children[0])
+}
+
+pub fn (pv &PropertyValidator) validate_border_style_value(prop_name string, node ast.Node) !css.BorderLineStyle {
+	return match node {
+		ast.Ident {
+			match node.name {
+				'none' {
+					datatypes.LineStyle.@none
+				}
+				'hidden' {
+					datatypes.LineStyle.hidden
+				}
+				'dotted' {
+					datatypes.LineStyle.dotted
+				}
+				'dashed' {
+					datatypes.LineStyle.dashed
+				}
+				'solid' {
+					datatypes.LineStyle.solid
+				}
+				'double' {
+					datatypes.LineStyle.double
+				}
+				'groove' {
+					datatypes.LineStyle.groove
+				}
+				'ridge' {
+					datatypes.LineStyle.ridge
+				}
+				'inset' {
+					datatypes.LineStyle.inset
+				}
+				'outset' {
+					datatypes.LineStyle.outset
+				}
+				else {
+					css.Keyword(node.name)
+				}
+			}
+		}
+		else {
+			ast.NodeError{
+				msg: 'invalid value for property "${prop_name}"!'
+				pos: node.pos()
+			}
+		}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_border_style(raw_value ast.Value) !css.BorderStyles {
+	mut vals := []css.BorderLineStyle{}
+
+	for child in raw_value.children {
+		vals << pv.validate_border_style_value('border-style', child)!
+	}
+
+	if vals.len == 1 {
+		return css.BorderStyles{vals[0], vals[0], vals[0], vals[0]}
+	} else if vals.len == 2 {
+		return css.BorderStyles{vals[0], vals[1], vals[0], vals[1]}
+	} else if vals.len == 3 {
+		return css.BorderStyles{vals[0], vals[1], vals[2], vals[1]}
+	} else if vals.len == 4 {
+		return css.BorderStyles{vals[0], vals[1], vals[2], vals[3]}
+	} else {
+		return ast.NodeError{
+			msg: 'property "border-style" can have a maximum of 4 values!'
 			pos: raw_value.pos
 		}
 	}
