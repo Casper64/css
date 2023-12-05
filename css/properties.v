@@ -19,12 +19,14 @@ pub mut:
 // https://developer.mozilla.org/en-US/docs/Web/CSS/border
 pub struct Border {
 pub mut:
+	collapse Keyword = 'separate'
 	colors   BorderColors
 	styles   BorderStyles
 	widths   FourDimensions
-	collapse Keyword = 'separate'
+	radius   BorderRadius
 }
 
+// used for shorthand properties of border-bottom, border-left etc.
 pub struct SingleBorder {
 pub mut:
 	color ?ColorValue
@@ -32,6 +34,7 @@ pub mut:
 	width DimensionValue  = css.zero_px
 }
 
+// border-color
 pub struct BorderColors {
 pub mut:
 	top    ?ColorValue
@@ -40,6 +43,7 @@ pub mut:
 	left   ?ColorValue
 }
 
+// border-style
 pub struct BorderStyles {
 pub mut:
 	top    BorderLineStyle = datatypes.LineStyle.@none
@@ -47,6 +51,18 @@ pub mut:
 	bottom BorderLineStyle = datatypes.LineStyle.@none
 	left   BorderLineStyle = datatypes.LineStyle.@none
 }
+
+// border-radius
+pub struct BorderRadius {
+pub mut:
+	top_left     SingleBorderRadius = []DimensionValue{len: 2, init: css.zero_px}
+	top_right    SingleBorderRadius = []DimensionValue{len: 2, init: css.zero_px}
+	bottom_right SingleBorderRadius = []DimensionValue{len: 2, init: css.zero_px}
+	bottom_left  SingleBorderRadius = []DimensionValue{len: 2, init: css.zero_px}
+}
+
+// border-top-left-radius
+pub type SingleBorderRadius = []DimensionValue
 
 // For properties like `margin` and `padding` that can have 4 dimensions values
 // https://developer.mozilla.org/en-US/docs/Web/CSS/margin

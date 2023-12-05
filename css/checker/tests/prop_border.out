@@ -68,3 +68,37 @@ css/checker/tests/prop_border.css:19:13: error: property "border" can have a max
       |             ~~~~~~~~~~~~~~~~~~~~
    20 |     border: inherit;
    21 | }
+css/checker/tests/prop_border.css:24:25: error: expecting a length or percentage after "/"
+   22 | 
+   23 | .radius {
+   24 |     border-radius: 10px / ;
+      |                         ^
+   25 |     border-radius: 1px 2px 3px 4px 5px;
+   26 |     border-top-left-radius: 20px / ;
+css/checker/tests/prop_border.css:25:36: error: property "border-radius" can have a maximum of 4 values
+   23 | .radius {
+   24 |     border-radius: 10px / ;
+   25 |     border-radius: 1px 2px 3px 4px 5px;
+      |                                    ~~~
+   26 |     border-top-left-radius: 20px / ;
+   27 |     border-top-left-radius: 1px 2px 3px 4px;
+css/checker/tests/prop_border.css:26:29: error: invalid value for property "border-top-left-radius"
+   24 |     border-radius: 10px / ;
+   25 |     border-radius: 1px 2px 3px 4px 5px;
+   26 |     border-top-left-radius: 20px / ;
+      |                             ~~~~~~~~
+   27 |     border-top-left-radius: 1px 2px 3px 4px;
+   28 |     border-top-left-radius: 1px 2px 3px;
+css/checker/tests/prop_border.css:27:29: error: invalid value for property "border-top-left-radius"
+   25 |     border-radius: 1px 2px 3px 4px 5px;
+   26 |     border-top-left-radius: 20px / ;
+   27 |     border-top-left-radius: 1px 2px 3px 4px;
+      |                             ~~~~~~~~~~~~~~~~
+   28 |     border-top-left-radius: 1px 2px 3px;
+   29 | }
+css/checker/tests/prop_border.css:28:33: error: expecting a "/"
+   26 |     border-top-left-radius: 20px / ;
+   27 |     border-top-left-radius: 1px 2px 3px 4px;
+   28 |     border-top-left-radius: 1px 2px 3px;
+      |                                 ~~~
+   29 | }

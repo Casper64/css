@@ -141,6 +141,9 @@ fn set_grouped_border(prop_name string, value Value, mut style_map map[string]Va
 			border_val.styles.left = sb.style
 			border_val.widths.left = sb.width
 		}
+		'border-radius' {
+			border_val.radius = value as BorderRadius
+		}
 		else {
 			if prop_name.ends_with('-color') {
 				border_val.colors = get_grouped_border_color(prop_name, value, style_map)
@@ -148,6 +151,8 @@ fn set_grouped_border(prop_name string, value Value, mut style_map map[string]Va
 				border_val.styles = get_grouped_border_style(prop_name, value, style_map)
 			} else if prop_name.ends_with('-width') {
 				border_val.widths = get_grouped_border_width(prop_name, value, style_map)
+			} else if prop_name.ends_with('-radius') {
+				border_val.radius = get_grouped_border_radius(prop_name, value, style_map)
 			}
 		}
 	}
@@ -204,4 +209,21 @@ fn get_grouped_border_width(prop_name string, value Value, style_map map[string]
 	}
 
 	return bwidth_val
+}
+
+fn get_grouped_border_radius(prop_name string, value Value, style_map map[string]Value) BorderRadius {
+	mut bradius_val := BorderRadius{}
+	if v := style_map['border'] {
+		bradius_val = (v as Border).radius
+	}
+
+	match prop_name {
+		'border-top-left-radius' { bradius_val.top_left = value as SingleBorderRadius }
+		'border-top-right-radius' { bradius_val.top_right = value as SingleBorderRadius }
+		'border-bottom-right-radius' { bradius_val.bottom_right = value as SingleBorderRadius }
+		'border-bottom-left' { bradius_val.bottom_left = value as SingleBorderRadius }
+		else {}
+	}
+
+	return bradius_val
 }

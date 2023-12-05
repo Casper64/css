@@ -336,3 +336,42 @@ fn test_single_border() {
 		}
 	}
 }
+
+fn test_border_radius() {
+	rules := css_util.parse_stylesheet_from_text('.t {
+		border-radius: 10% / 50% 25%;
+	}',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			radius: css.BorderRadius{
+				top_left: [datatypes.Percentage(0.1), datatypes.Percentage(0.5)]
+				top_right: [datatypes.Percentage(0.1), datatypes.Percentage(0.25)]
+				bottom_right: [datatypes.Percentage(0.1), datatypes.Percentage(0.5)]
+				bottom_left: [datatypes.Percentage(0.1), datatypes.Percentage(0.25)]
+			}
+		}
+	}
+}
+
+fn test_border_radius_merged() {
+	rules := css_util.parse_stylesheet_from_text('.t {
+		border-radius: 10% / 50% 25%;
+		border-top-left-radius: 30%;
+	}',
+		preferences)!
+	styles := rules.get_styles()
+
+	assert styles == {
+		'border': css.Border{
+			radius: css.BorderRadius{
+				top_left: [datatypes.Percentage(0.3), datatypes.Percentage(0.3)]
+				top_right: [datatypes.Percentage(0.1), datatypes.Percentage(0.25)]
+				bottom_right: [datatypes.Percentage(0.1), datatypes.Percentage(0.5)]
+				bottom_left: [datatypes.Percentage(0.1), datatypes.Percentage(0.25)]
+			}
+		}
+	}
+}

@@ -22,6 +22,7 @@ pub type Value = AlphaValue
 	| Border
 	| BorderColors
 	| BorderLineStyle
+	| BorderRadius
 	| BorderStyles
 	| ColorValue
 	| DimensionValue
@@ -32,6 +33,7 @@ pub type Value = AlphaValue
 	| Overflow
 	| Shadow
 	| SingleBorder
+	| SingleBorderRadius
 	| Text
 	| TextCombineUpright
 	| TextEllipsis

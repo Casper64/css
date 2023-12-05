@@ -111,6 +111,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		'border-style' {
 			return pv.validate_border_style(raw_value)!
 		}
+		'border-radius' {
+			return pv.validate_border_radius(raw_value)!
+		}
 		else {
 			// handle properties with similair endings / starts
 			if property.starts_with('background') {
@@ -120,7 +123,7 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 				return pv.validate_single_color_prop(property, raw_value)!
 			} else if property.starts_with('margin-') || property.starts_with('padding-') {
 				// for properties like `margin-left`, or `padding-top`
-				return pv.valditate_4dim_prop(property, raw_value)!
+				return pv.validate_4dim_prop(property, raw_value)!
 			} else if property.ends_with('-shadow') {
 				return pv.validate_shadow(property, raw_value)!
 			} else if property.starts_with('border-') {
@@ -128,6 +131,8 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 					return pv.validate_single_border_style(property, raw_value)!
 				} else if property.ends_with('-width') {
 					return pv.validate_single_dimension_prop(property, raw_value)!
+				} else if property.ends_with('-radius') {
+					return pv.validate_single_border_radius(property, raw_value)!
 				}
 			}
 		}
@@ -328,7 +333,7 @@ pub fn (pv &PropertyValidator) validate_alpha_value_prop(prop_name string, raw_v
 	return v
 }
 
-pub fn (pv &PropertyValidator) valditate_4dim_prop(prop_name string, raw_value ast.Value) !css.Value {
+pub fn (pv &PropertyValidator) validate_4dim_prop(prop_name string, raw_value ast.Value) !css.Value {
 	if four_dim_endings.any(fn [prop_name] (ending string) bool {
 		return prop_name.ends_with(ending)
 	})
@@ -749,7 +754,7 @@ pub fn (pv &PropertyValidator) validate_single_border(prop_name string, raw_valu
 			return border
 		}
 
-		style := pv.validate_border_style_value('border', child)!
+		style := pv.validate_border_style_value(prop_name, child)!
 		border.style = style
 
 		if style is css.Keyword {
@@ -775,14 +780,14 @@ pub fn (pv &PropertyValidator) validate_single_border(prop_name string, raw_valu
 			ast.Dimension {
 				if width != none {
 					return ast.NodeError{
-						msg: 'only 1 dimension value is allowed for property "border"'
+						msg: 'only 1 dimension value is allowed for property "${prop_name}"'
 						pos: child.pos
 					}
 				}
-				width = pv.validate_dimension('border', child)!
+				width = pv.validate_dimension(prop_name, child)!
 			}
 			ast.Ident {
-				style_val := pv.validate_border_style_value('border', child)!
+				style_val := pv.validate_border_style_value(prop_name, child)!
 				if style_val is css.Keyword {
 					// it's a color
 					if color != none {
@@ -796,7 +801,7 @@ pub fn (pv &PropertyValidator) validate_single_border(prop_name string, raw_valu
 					// it's a style
 					if style != none {
 						return ast.NodeError{
-							msg: 'only 1 border-style value is allowed for property "border"'
+							msg: 'only 1 border-style value is allowed for property "${prop_name}"'
 							pos: child.pos
 						}
 					}
@@ -806,11 +811,11 @@ pub fn (pv &PropertyValidator) validate_single_border(prop_name string, raw_valu
 			ast.Hash, ast.Function {
 				if color != none {
 					return ast.NodeError{
-						msg: 'only 1 color value is allowed for property "border"'
+						msg: 'only 1 color value is allowed for property "${prop_name}"'
 						pos: child.pos
 					}
 				}
-				color = pv.validate_single_color('border', child)!
+				color = pv.validate_single_color(prop_name, child)!
 			}
 			else {}
 		}
@@ -826,4 +831,91 @@ pub fn (pv &PropertyValidator) validate_single_border(prop_name string, raw_valu
 		border.width = w
 	}
 	return border
+}
+
+pub fn (pv &PropertyValidator) validate_border_radius(raw_value ast.Value) !css.BorderRadius {
+	mut slash_idx := ?int(none)
+
+	for i, child in raw_value.children {
+		match child {
+			ast.Operator {
+				if child.kind == .div {
+					if slash_idx != none {
+						return ast.NodeError{
+							msg: 'only one "/" is allowed for property "border-radius"'
+							pos: child.pos
+						}
+					} else {
+						slash_idx = i
+					}
+				} else {
+					return ast.NodeError{
+						msg: 'invalid value for property "border-radius"'
+						pos: child.pos
+					}
+				}
+			}
+			else {}
+		}
+	}
+
+	mut normal_radiae := css.FourDimensions{}
+	mut extra_radiae := css.FourDimensions{}
+
+	if si := slash_idx {
+		if si == raw_value.children.len - 1 {
+			return ast.NodeError{
+				msg: 'expecting a length or percentage after "/"'
+				pos: raw_value.children.last().pos()
+			}
+		}
+
+		normal_radiae = pv.validate_4_dim_value_prop('border-radius', ast.Value{
+			children: raw_value.children[..si]
+			pos: raw_value.pos
+		})!
+		extra_radiae = pv.validate_4_dim_value_prop('border-radius', ast.Value{
+			children: raw_value.children[si + 1..]
+			pos: raw_value.pos
+		})!
+	} else {
+		normal_radiae = pv.validate_4_dim_value_prop('border-radius', raw_value)!
+		extra_radiae = normal_radiae
+	}
+
+	return css.BorderRadius{[normal_radiae.top, extra_radiae.top], [normal_radiae.right, extra_radiae.right], [
+		normal_radiae.bottom,
+		extra_radiae.bottom,
+	], [normal_radiae.left, extra_radiae.left]}
+}
+
+pub fn (pv &PropertyValidator) validate_single_border_radius(prop_name string, raw_value ast.Value) !css.SingleBorderRadius {
+	if raw_value.children.len == 1 {
+		dim := pv.validate_dimension(prop_name, raw_value.children[0])!
+		return [dim, dim]
+	} else if raw_value.children.len != 3 {
+		return ast.NodeError{
+			msg: 'invalid value for property "${prop_name}"'
+			pos: raw_value.pos
+		}
+	}
+
+	dim1 := pv.validate_dimension(prop_name, raw_value.children[0])!
+	slash := raw_value.children[1]
+	if slash is ast.Operator {
+		if slash.kind != .div {
+			return ast.NodeError{
+				msg: 'expecting a "/"'
+				pos: slash.pos
+			}
+		}
+	} else {
+		return ast.NodeError{
+			msg: 'expecting a "/"'
+			pos: slash.pos()
+		}
+	}
+	dim2 := pv.validate_dimension(prop_name, raw_value.children[2])!
+
+	return [dim1, dim2]
 }
