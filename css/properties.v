@@ -118,3 +118,14 @@ pub mut:
 	overflow_x Keyword = 'visible'
 	overflow_y Keyword = 'visible'
 }
+
+pub struct FlexBox {
+pub mut:
+	basis     DimensionValue = Keyword('auto')
+	direction FlexDirection  = datatypes.FlexDirectionKind.row
+	// negative numbers are invalid
+	grow FlexSize = 0.0
+	// negative numbers are invalid
+	shrink FlexSize = 1.0
+	wrap   FlexWrap = datatypes.FlexWrapKind.nowrap
+}

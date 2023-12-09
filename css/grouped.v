@@ -18,6 +18,8 @@ fn set_grouped(prop_name string, value Value, mut style_map map[string]Value) {
 		set_grouped_overflow(prop_name, value, mut style_map)
 	} else if prop_name.starts_with('border') {
 		set_grouped_border(prop_name, value, mut style_map)
+	} else if prop_name.starts_with('flex') {
+		set_grouped_flex(prop_name, value, mut style_map)
 	} else {
 		style_map[prop_name] = value
 	}
@@ -226,4 +228,37 @@ fn get_grouped_border_radius(prop_name string, value Value, style_map map[string
 	}
 
 	return bradius_val
+}
+
+fn set_grouped_flex(prop_name string, value Value, mut style_map map[string]Value) {
+	mut flex_val := (style_map['flex'] or { FlexBox{} }) as FlexBox
+
+	match prop_name {
+		'flex' {
+			flex := value as FlexBox
+			flex_val.grow = flex.grow
+			flex_val.shrink = flex.shrink
+			flex_val.basis = flex.basis
+		}
+		'flex-flow' {
+			flex := value as FlexBox
+			flex_val.direction = flex.direction
+			flex_val.wrap = flex.wrap
+		}
+		'flex-direction' {
+			flex_val.direction = value as FlexDirection
+		}
+		'flex-grow' {
+			flex_val.grow = value as FlexSize
+		}
+		'flex-shrink' {
+			flex_val.shrink = value as FlexSize
+		}
+		'flex-wrap' {
+			flex_val.wrap = value as FlexWrap
+		}
+		else {}
+	}
+
+	style_map['flex'] = flex_val
 }

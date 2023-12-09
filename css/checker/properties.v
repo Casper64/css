@@ -82,22 +82,28 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		// TODO: these values aren't used that often, check if it's faster to match them at the end of the `else` clause
 		'align-content', 'align-items', 'align-self', 'all', 'appearance', 'backface-visibility',
 		'border-collapse', 'box-sizing', 'caption-side', 'clear', 'cursor', 'direction', 'display',
-		'empty-cells', 'float', 'forced-color-adjust', 'isolation', 'justify-content',
-		'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit', 'overflow-x',
-		'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize',
+		'empty-cells', 'float', 'forced-color-adjust', 'flex-basis', 'isolation',
+		'justify-content', 'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit',
+		'overflow-x', 'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize',
 		'scroll-behavior', 'table-layout', 'text-align', 'text-align-last', 'text-justify',
 		'text-rendering', 'text-transform', 'text-wrap', 'touch-action', 'unicode-bidi',
 		'user-select', 'visibility', 'white-space', 'word-break', 'word-wrap', 'writing-mode' {
 			return pv.validate_single_keyword_prop(property, raw_value)!
 		}
-		'text-overflow' {
-			return pv.validate_text_overflow(raw_value)!
+		'flex-grow', 'flex-shrink' {
+			return pv.valdiate_flex_size(property, raw_value)!
 		}
-		'text-combine-upright' {
-			return pv.validate_text_combine_upright(raw_value)!
+		'flex-direction' {
+			return pv.validate_flex_direction(property, raw_value)!
 		}
-		'overflow' {
-			return pv.validate_overflow(raw_value)!
+		'flex-wrap' {
+			return pv.validate_flex_wrap(property, raw_value)!
+		}
+		'flex-flow' {
+			return pv.validate_flex_flow(raw_value)!
+		}
+		'flex' {
+			return pv.validate_flex(raw_value)!
 		}
 		'border' {
 			return pv.validate_border(raw_value)!
@@ -113,6 +119,15 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		'border-radius' {
 			return pv.validate_border_radius(raw_value)!
+		}
+		'text-overflow' {
+			return pv.validate_text_overflow(raw_value)!
+		}
+		'text-combine-upright' {
+			return pv.validate_text_combine_upright(raw_value)!
+		}
+		'overflow' {
+			return pv.validate_overflow(raw_value)!
 		}
 		else {
 			// handle properties with similair endings / starts
@@ -918,4 +933,224 @@ pub fn (pv &PropertyValidator) validate_single_border_radius(prop_name string, r
 	dim2 := pv.validate_dimension(prop_name, raw_value.children[2])!
 
 	return [dim1, dim2]
+}
+
+pub fn (pv &PropertyValidator) valdiate_flex_size(prop_name string, raw_value ast.Value) !css.FlexSize {
+	if raw_value.children.len != 1 {
+		return ast.NodeError{
+			msg: 'property "${prop_name}" can only have 1 value!'
+			pos: raw_value.pos
+		}
+	}
+
+	child := raw_value.children[0]
+	return match child {
+		ast.Number {
+			val := child.value.f64()
+			if val < 0 {
+				return ast.NodeError{
+					msg: 'value for property "${prop_name}" cannot be negative!'
+					pos: child.pos
+				}
+			}
+
+			val
+		}
+		ast.Ident {
+			css.Keyword(child.name)
+		}
+		else {
+			ast.NodeError{
+				msg: 'invalid value for property "${prop_name}"'
+				pos: child.pos()
+			}
+		}
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_flex_direction(prop_name string, raw_value ast.Value) !css.FlexDirection {
+	if raw_value.children.len != 1 {
+		return ast.NodeError{
+			msg: 'property "${prop_name}" can only have 1 value!'
+			pos: raw_value.pos
+		}
+	}
+
+	child := raw_value.children[0]
+	if child is ast.Ident {
+		match child.name {
+			'row' { return datatypes.FlexDirectionKind.row }
+			'row-reverse' { return datatypes.FlexDirectionKind.row_reverse }
+			'column' { return datatypes.FlexDirectionKind.column }
+			'column-reverse' { return datatypes.FlexDirectionKind.column_reverse }
+			else {}
+		}
+	}
+
+	return ast.NodeError{
+		msg: 'invalid value for property "${prop_name}"'
+		pos: child.pos()
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_flex_wrap(prop_name string, raw_value ast.Value) !css.FlexWrap {
+	if raw_value.children.len != 1 {
+		return ast.NodeError{
+			msg: 'property "${prop_name}" can only have 1 value!'
+			pos: raw_value.pos
+		}
+	}
+
+	child := raw_value.children[0]
+	if child is ast.Ident {
+		match child.name {
+			'nowrap' { return datatypes.FlexWrapKind.nowrap }
+			'wrap' { return datatypes.FlexWrapKind.wrap }
+			'wrap-reverse' { return datatypes.FlexWrapKind.wrap_reverse }
+			else {}
+		}
+	}
+
+	return ast.NodeError{
+		msg: 'invalid value for property "${prop_name}"'
+		pos: child.pos()
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_flex_flow(raw_value ast.Value) !css.FlexBox {
+	if raw_value.children.len == 1 {
+		child := raw_value.children[0]
+		if child is ast.Ident {
+			return css.FlexBox{
+				direction: css.Keyword(child.name)
+				wrap: css.Keyword(child.name)
+			}
+		}
+
+		if direction := pv.validate_flex_direction('flex-flow', ast.Value{
+			children: [child]
+			pos: child.pos()
+		})
+		{
+			return css.FlexBox{
+				direction: direction
+			}
+		} else if wrap := pv.validate_flex_wrap('flex-flow', ast.Value{
+			children: [child]
+			pos: child.pos()
+		})
+		{
+			return css.FlexBox{
+				wrap: wrap
+			}
+		}
+	} else if raw_value.children.len == 2 {
+		direction := pv.validate_flex_direction('flex-flow', ast.Value{
+			children: [raw_value.children[0]]
+			pos: raw_value.children[0].pos()
+		})!
+		wrap := pv.validate_flex_wrap('flex-flow', ast.Value{
+			children: [raw_value.children[1]]
+			pos: raw_value.children[1].pos()
+		})!
+		return css.FlexBox{
+			direction: direction
+			wrap: wrap
+		}
+	}
+
+	return ast.NodeError{
+		msg: 'invalid value for property "flex-flow"'
+		pos: raw_value.pos
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_flex(raw_value ast.Value) !css.FlexBox {
+	mut dimension_values := []css.DimensionValue{}
+	mut number_vals := []f64{}
+	mut keywords := []string{}
+
+	for child in raw_value.children {
+		match child {
+			ast.Dimension {
+				dimension_values << pv.validate_dimension('flex', child)!
+			}
+			ast.Number {
+				val := child.value.f64()
+				if val < 0 {
+					dimension_values << val
+				} else {
+					number_vals << val
+				}
+			}
+			ast.Ident {
+				keywords << child.name
+			}
+			else {
+				return ast.NodeError{
+					msg: 'invalid value for property "flex"'
+					pos: child.pos()
+				}
+			}
+		}
+	}
+
+	if raw_value.children.len == 1 && number_vals.len == 1 {
+		// flex-grow
+		return css.FlexBox{
+			grow: number_vals[0]
+			shrink: 1.0
+			basis: 0.0
+		}
+	} else if raw_value.children.len == 1 && dimension_values.len == 1 {
+		return css.FlexBox{
+			grow: 1.0
+			shrink: 1.0
+			basis: dimension_values[0]
+		}
+	} else if raw_value.children.len == 1 && keywords.len == 1 {
+		return css.FlexBox{
+			grow: 1.0
+			shrink: 1.0
+			basis: css.Keyword(keywords[0])
+		}
+	} else if raw_value.children.len == 2 && number_vals.len == 2 {
+		// flex-grow and flex-shrink
+		return css.FlexBox{
+			grow: number_vals[0]
+			shrink: number_vals[1]
+			basis: 0.0
+		}
+	} else if raw_value.children.len == 2 && number_vals.len == 1 && dimension_values.len == 1 {
+		// flex-grow and flex-basis
+		return css.FlexBox{
+			grow: number_vals[0]
+			shrink: 1.0
+			basis: dimension_values[0]
+		}
+	} else if raw_value.children.len == 3 {
+		mut flex := css.FlexBox{
+			grow: number_vals[0]
+			shrink: number_vals[1]
+		}
+		if keywords.len == 1 {
+			flex.basis = css.Keyword(keywords[0])
+		} else if dimension_values.len == 1 {
+			flex.basis = dimension_values[0]
+		} else if number_vals.len == 3 {
+			flex.basis = number_vals[2]
+		} else {
+			return ast.NodeError{
+				msg: 'invalid value for property "flex"'
+				pos: raw_value.pos
+			}
+		}
+
+		return flex
+	}
+
+	return ast.NodeError{
+		msg: 'invalid value for property "flex"'
+		pos: raw_value.pos
+	}
 }

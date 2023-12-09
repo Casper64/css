@@ -1,0 +1,77 @@
+css/checker/tests/prop_flex.css:3:21: error: property "flex-direction" can only have 1 value!
+    1 | 
+    2 | .flex-direction {
+    3 |     flex-direction: column row;
+      |                     ~~~~~~~~~~~
+    4 |     flex-direction: 'column';
+    5 | }
+css/checker/tests/prop_flex.css:4:21: error: invalid value for property "flex-direction"
+    2 | .flex-direction {
+    3 |     flex-direction: column row;
+    4 |     flex-direction: 'column';
+      |                     ~~~~~~~~
+    5 | }
+    6 |
+css/checker/tests/prop_flex.css:9:16: error: property "flex-grow" can only have 1 value!
+    7 | .flex-size {
+    8 |     flex-grow: 1.0;
+    9 |     flex-grow: auto 2.0;
+      |                ~~~~~~~~~
+   10 |     flex-shrink: -1;
+   11 |     flex-grow: 'blabla';
+css/checker/tests/prop_flex.css:10:18: error: value for property "flex-shrink" cannot be negative!
+    8 |     flex-grow: 1.0;
+    9 |     flex-grow: auto 2.0;
+   10 |     flex-shrink: -1;
+      |                  ~~
+   11 |     flex-grow: 'blabla';
+   12 | }
+css/checker/tests/prop_flex.css:11:16: error: invalid value for property "flex-grow"
+    9 |     flex-grow: auto 2.0;
+   10 |     flex-shrink: -1;
+   11 |     flex-grow: 'blabla';
+      |                ~~~~~~~~
+   12 | }
+   13 |
+css/checker/tests/prop_flex.css:15:16: error: property "flex-wrap" can only have 1 value!
+   13 | 
+   14 | .flex-wrap {
+   15 |     flex-wrap: nowrap other;
+      |                ~~~~~~~~~~~~~
+   16 |     flex-wrap: 2;
+   17 | }
+css/checker/tests/prop_flex.css:16:16: error: invalid value for property "flex-wrap"
+   14 | .flex-wrap {
+   15 |     flex-wrap: nowrap other;
+   16 |     flex-wrap: 2;
+      |                ^
+   17 | }
+   18 |
+css/checker/tests/prop_flex.css:20:16: error: invalid value for property "flex-flow"
+   18 | 
+   19 | .flex-flow {
+   20 |     flex-flow: column row-reverse wrap;
+      |                ~~~~~~~~~~~~~~~~~~~~~~~~
+   21 |     flex-flow: column other;
+   22 |     flex-flow: 'what';
+css/checker/tests/prop_flex.css:21:23: error: invalid value for property "flex-flow"
+   19 | .flex-flow {
+   20 |     flex-flow: column row-reverse wrap;
+   21 |     flex-flow: column other;
+      |                       ~~~~~
+   22 |     flex-flow: 'what';
+   23 | }
+css/checker/tests/prop_flex.css:22:16: error: invalid value for property "flex-flow"
+   20 |     flex-flow: column row-reverse wrap;
+   21 |     flex-flow: column other;
+   22 |     flex-flow: 'what';
+      |                ~~~~~~~
+   23 | }
+   24 |
+css/checker/tests/prop_flex.css:26:11: error: invalid value for property "flex"
+   24 | 
+   25 | .flex {
+   26 |     flex: 0 0 0 0;
+      |           ~~~~~~~~
+   27 | }
+   28 |

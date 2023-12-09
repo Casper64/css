@@ -1,0 +1,33 @@
+
+.flex-direction {
+    flex-direction: column row;
+    flex-direction: 'column';
+}
+
+.flex-size {
+    flex-grow: 1.0;
+    flex-grow: auto 2.0;
+    flex-shrink: -1;
+    flex-grow: 'blabla';
+}
+
+.flex-wrap {
+    flex-wrap: nowrap other;
+    flex-wrap: 2;
+}
+
+.flex-flow {
+    flex-flow: column row-reverse wrap;
+    flex-flow: column other;
+    flex-flow: 'what';
+}
+
+.flex {
+    flex: 0 0 0 0;
+}
+
+.flex-valid {
+    flex: 0 0 0;
+    flex: 1 1 20%;
+    flex: auto;
+}

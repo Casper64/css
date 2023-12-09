@@ -26,6 +26,10 @@ pub type Value = AlphaValue
 	| BorderStyles
 	| ColorValue
 	| DimensionValue
+	| FlexBox
+	| FlexDirection
+	| FlexSize
+	| FlexWrap
 	| FourDimensions
 	| Gradient
 	| Image
@@ -347,3 +351,7 @@ pub type TextOverflow = Keyword | TextEllipsis
 pub type ShadowValue = Keyword | Shadow
 
 pub type BorderLineStyle = Keyword | datatypes.LineStyle
+
+pub type FlexSize = Keyword | f64
+pub type FlexDirection = Keyword | datatypes.FlexDirectionKind
+pub type FlexWrap = Keyword | datatypes.FlexWrapKind

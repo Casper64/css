@@ -105,3 +105,16 @@ pub enum GradientDirection {
 	left
 	bottom
 }
+
+pub enum FlexDirectionKind {
+	row
+	row_reverse
+	column
+	column_reverse
+}
+
+pub enum FlexWrapKind {
+	nowrap
+	wrap
+	wrap_reverse
+}
