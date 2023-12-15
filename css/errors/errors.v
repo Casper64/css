@@ -1,6 +1,8 @@
+// Copyright (c) 2019-2023 Alexander Medvednikov. All rights reserved.
+// Use of this source code is governed by an MIT license
+// that can be found in the LICENSE file.
 module errors
 
-// ACKNOWLEDGEMENT: this file is almost a straight copy paste from v/vlib/v/util/errors.v
 import css.token
 import os
 import strings
