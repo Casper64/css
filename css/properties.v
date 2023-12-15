@@ -74,18 +74,6 @@ pub mut:
 	left   DimensionValue = css.zero_px
 }
 
-pub struct Gradient {
-pub mut:
-	kind            datatypes.GradientKind
-	directions      datatypes.GradientDirection
-	gradient_values []GradientValue
-}
-
-pub struct GradientValue {
-	color ColorValue
-	size  ?DimensionValue
-}
-
 pub struct Text {
 pub mut:
 	align           ?string

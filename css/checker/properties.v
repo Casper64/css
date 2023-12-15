@@ -64,10 +64,10 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		'color' {
 			return pv.validate_single_color_prop(property, raw_value)!
 		}
-		'block-size', 'bottom', 'column-gap', 'height', 'inline-size', 'left', 'letter-spacing',
-		'line-height', 'max-height', 'max-width', 'min-height', 'min-width', 'order', 'orphans',
-		'perspective', 'right', 'row-gap', 'tab-size', 'text-indent', 'top', 'vertical-align',
-		'widows', 'width', 'word-spacing', 'z-index' {
+		'block-size', 'bottom', 'column-gap', 'flex-basis', 'height', 'inline-size', 'left',
+		'letter-spacing', 'line-height', 'max-height', 'max-width', 'min-height', 'min-width',
+		'order', 'orphans', 'perspective', 'right', 'row-gap', 'tab-size', 'text-indent', 'top',
+		'vertical-align', 'widows', 'width', 'word-spacing', 'z-index' {
 			return pv.validate_single_dimension_prop(property, raw_value)!
 		}
 		'opacity' {
@@ -82,9 +82,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		// TODO: these values aren't used that often, check if it's faster to match them at the end of the `else` clause
 		'align-content', 'align-items', 'align-self', 'all', 'appearance', 'backface-visibility',
 		'border-collapse', 'box-sizing', 'caption-side', 'clear', 'cursor', 'direction', 'display',
-		'empty-cells', 'float', 'forced-color-adjust', 'flex-basis', 'isolation',
-		'justify-content', 'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit',
-		'overflow-x', 'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize',
+		'empty-cells', 'float', 'forced-color-adjust', 'isolation', 'justify-content',
+		'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit', 'overflow-x',
+		'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize',
 		'scroll-behavior', 'table-layout', 'text-align', 'text-align-last', 'text-justify',
 		'text-rendering', 'text-transform', 'text-wrap', 'touch-action', 'unicode-bidi',
 		'user-select', 'visibility', 'white-space', 'word-break', 'word-wrap', 'writing-mode' {
@@ -679,50 +679,49 @@ pub fn (pv &PropertyValidator) validate_single_border_style(prop_name string, ra
 }
 
 pub fn (pv &PropertyValidator) validate_border_style_value(prop_name string, node ast.Node) !css.BorderLineStyle {
-	return match node {
+	match node {
 		ast.Ident {
 			match node.name {
 				'none' {
-					datatypes.LineStyle.@none
+					return datatypes.LineStyle.@none
 				}
 				'hidden' {
-					datatypes.LineStyle.hidden
+					return datatypes.LineStyle.hidden
 				}
 				'dotted' {
-					datatypes.LineStyle.dotted
+					return datatypes.LineStyle.dotted
 				}
 				'dashed' {
-					datatypes.LineStyle.dashed
+					return datatypes.LineStyle.dashed
 				}
 				'solid' {
-					datatypes.LineStyle.solid
+					return datatypes.LineStyle.solid
 				}
 				'double' {
-					datatypes.LineStyle.double
+					return datatypes.LineStyle.double
 				}
 				'groove' {
-					datatypes.LineStyle.groove
+					return datatypes.LineStyle.groove
 				}
 				'ridge' {
-					datatypes.LineStyle.ridge
+					return datatypes.LineStyle.ridge
 				}
 				'inset' {
-					datatypes.LineStyle.inset
+					return datatypes.LineStyle.inset
 				}
 				'outset' {
-					datatypes.LineStyle.outset
+					return datatypes.LineStyle.outset
 				}
 				else {
-					css.Keyword(node.name)
+					return css.Keyword(node.name)
 				}
 			}
 		}
-		else {
-			ast.NodeError{
-				msg: 'invalid value for property "${prop_name}"!'
-				pos: node.pos()
-			}
-		}
+		else {}
+	}
+	return ast.NodeError{
+		msg: 'invalid value for property "${prop_name}"!'
+		pos: node.pos()
 	}
 }
 

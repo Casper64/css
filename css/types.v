@@ -40,7 +40,6 @@ pub type Value = AlphaValue
 	| SingleBorderRadius
 	| Text
 	| TextCombineUpright
-	| TextEllipsis
 	| TextOverflow
 	| string
 

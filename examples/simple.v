@@ -2,8 +2,10 @@ module main
 
 import css
 import css.util as css_util
+import os
 
 fn main() {
+	os.chdir(os.dir(@FILE))!
 	// get all rules from `simple.css`
 	mut rules := css_util.parse_stylesheet('simple.css')!
 

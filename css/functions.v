@@ -1,5 +1,7 @@
 module css
 
+import css.datatypes
+
 pub enum UrlKind {
 	link // http://
 	data // data:image/png;base64,
@@ -19,4 +21,16 @@ pub fn (u1 Url) == (u2 Url) bool {
 	}
 
 	return u1.value == u2.value
+}
+
+pub struct Gradient {
+pub mut:
+	kind            datatypes.GradientKind
+	directions      datatypes.GradientDirection
+	gradient_values []GradientValue
+}
+
+pub struct GradientValue {
+	color ColorValue
+	size  ?DimensionValue
 }
