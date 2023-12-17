@@ -46,3 +46,32 @@ fn test_font_stretch() {
 		}
 	}
 }
+
+fn test_font_weight() {
+	mut rules := css_util.parse_stylesheet_from_text('.t { font-weight: 392; }', preferences)!
+	mut styles := rules.get_styles()
+
+	assert styles == {
+		'font': css.Font{
+			weight: 392
+		}
+	}
+
+	rules = css_util.parse_stylesheet_from_text('.t { font-weight: 100.9; }', preferences)!
+	styles = rules.get_styles()
+
+	assert styles == {
+		'font': css.Font{
+			weight: 100
+		}
+	}
+
+	rules = css_util.parse_stylesheet_from_text('.t { font-weight: normal; }', preferences)!
+	styles = rules.get_styles()
+
+	assert styles == {
+		'font': css.Font{
+			weight: css.Keyword('normal')
+		}
+	}
+}
