@@ -1,0 +1,7 @@
+css/checker/tests/prop_gap.css:3:10: error: invalid value for property "gap"
+    1 | 
+    2 | .gap {
+    3 |     gap: 10px 20px 30px;
+      |          ~~~~~~~~~~~~~~~
+    4 |     gap: what;
+    5 |     gap: 20vw;

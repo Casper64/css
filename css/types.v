@@ -17,6 +17,25 @@ pub type Keyword = string
 
 pub type Image = Gradient | Keyword | Url
 
+pub type TextCombineUprightDigits = int
+pub type TextCombineUpright = Keyword | TextCombineUprightDigits
+
+// text-overflow: ellipsis "[..]"; will become `css.TextOverflow(css.TextEllipsis('[..]'))`
+pub type TextEllipsis = string
+pub type TextOverflow = Keyword | TextEllipsis
+
+pub type ShadowValue = Keyword | Shadow
+
+pub type BorderLineStyle = Keyword | datatypes.LineStyle
+
+pub type FlexSize = Keyword | f64
+pub type FlexDirection = Keyword | datatypes.FlexDirectionKind
+pub type FlexWrap = Keyword | datatypes.FlexWrapKind
+
+pub type FontStretch = Keyword | datatypes.FontStretchKind | datatypes.Percentage
+pub type FontWeight = Keyword | int
+pub type FontFamily = []string
+
 pub type Value = AlphaValue
 	| Background
 	| Border
@@ -35,6 +54,7 @@ pub type Value = AlphaValue
 	| FontStretch
 	| FontWeight
 	| FourDimensions
+	| Gap
 	| Gradient
 	| Image
 	| Keyword
@@ -322,6 +342,11 @@ pub fn (r Rule) matches(selectors []Selector) bool {
 	return r.selectors.matches(selectors)
 }
 
+@[inline]
+pub fn (rules []Rule) get_matching(selectors []Selector) []Rule {
+	return rules.filter(it.matches(selectors))
+}
+
 pub fn (rules []Rule) get_styles() map[string]Value {
 	// TODO: merge grouped properties together e.g. `background` gets split
 	// into 'background-color', 'background-width' etc.
@@ -343,22 +368,3 @@ pub fn (rules []Rule) get_styles() map[string]Value {
 
 	return styles
 }
-
-pub type TextCombineUprightDigits = int
-pub type TextCombineUpright = Keyword | TextCombineUprightDigits
-
-// text-overflow: ellipsis "[..]"; will become `css.TextOverflow(css.TextEllipsis('[..]'))`
-pub type TextEllipsis = string
-pub type TextOverflow = Keyword | TextEllipsis
-
-pub type ShadowValue = Keyword | Shadow
-
-pub type BorderLineStyle = Keyword | datatypes.LineStyle
-
-pub type FlexSize = Keyword | f64
-pub type FlexDirection = Keyword | datatypes.FlexDirectionKind
-pub type FlexWrap = Keyword | datatypes.FlexWrapKind
-
-pub type FontStretch = Keyword | datatypes.FontStretchKind | datatypes.Percentage
-pub type FontWeight = Keyword | int
-pub type FontFamily = []string

@@ -129,3 +129,9 @@ pub mut:
 	shrink FlexSize = 1.0
 	wrap   FlexWrap = datatypes.FlexWrapKind.nowrap
 }
+
+pub struct Gap {
+pub mut:
+	row    DimensionValue = css.zero_px
+	column DimensionValue = css.zero_px
+}

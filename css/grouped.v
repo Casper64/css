@@ -22,6 +22,8 @@ fn set_grouped(prop_name string, value Value, mut style_map map[string]Value) {
 		set_grouped_flex(prop_name, value, mut style_map)
 	} else if prop_name.starts_with('font') {
 		set_grouped_font(prop_name, value, mut style_map)
+	} else if prop_name.ends_with('gap') {
+		set_grouped_gap(prop_name, value, mut style_map)
 	} else {
 		style_map[prop_name] = value
 	}
@@ -277,4 +279,17 @@ fn set_grouped_font(prop_name string, value Value, mut style_map map[string]Valu
 	}
 
 	style_map['font'] = font_val
+}
+
+fn set_grouped_gap(prop_name string, value Value, mut style_map map[string]Value) {
+	mut gap_val := (style_map['gap'] or { Gap{} }) as Gap
+
+	match prop_name {
+		'gap' { gap_val = value as Gap }
+		'row-gap' { gap_val.row = value as DimensionValue }
+		'column-gap' { gap_val.column = value as DimensionValue }
+		else {}
+	}
+
+	style_map['gap'] = gap_val
 }

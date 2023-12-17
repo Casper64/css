@@ -61,7 +61,7 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		return error('variable')
 	}
 	match property {
-		'color' {
+		'accent-color', 'color' {
 			return pv.validate_single_color_prop(property, raw_value)!
 		}
 		'block-size', 'bottom', 'column-gap', 'flex-basis', 'font-size', 'height', 'inline-size',
@@ -137,6 +137,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		'font-weight' {
 			return pv.validate_font_weight(raw_value)!
+		}
+		'gap' {
+			return pv.validate_gap(raw_value)!
 		}
 		else {
 			// handle properties with similair endings / starts
@@ -1273,5 +1276,24 @@ pub fn (pv &PropertyValidator) validate_font_weight(raw_value ast.Value) !css.Fo
 	return ast.NodeError{
 		msg: 'invalid value for property "font-weight"'
 		pos: child.pos()
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_gap(raw_value ast.Value) !css.Gap {
+	mut vals := []css.DimensionValue{}
+
+	for child in raw_value.children {
+		vals << pv.validate_dimension('gap', child)!
+	}
+
+	if vals.len == 1 {
+		return css.Gap{vals[0], vals[0]}
+	} else if vals.len == 2 {
+		return css.Gap{vals[0], vals[1]}
+	}
+
+	return ast.NodeError{
+		msg: 'invalid value for property "gap"'
+		pos: raw_value.pos
 	}
 }

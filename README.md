@@ -75,9 +75,9 @@ the exact specification of each struct/sumtype.
 | `BorderColors` | 'border-color' | struct containing all 4 colors for each border side, will be merged into `Border` |
 | `BorderRadius` | 'border-radius' | struct containing the radius for each corner, will be merged into `Border` |
 | `BorderStyles` | 'border-style' | struct containing all styles for each border, will be merged into `Border` |
-| `ColorValue` | 'color' | A sumtype representing a color value, each property ending with `-color` will be this type. |
+| `ColorValue` | 'accent-color', 'background-color', 'caret-color', 'color', 'column-rule-color', 'outline-color' | A sumtype representing a color value, each property ending with `-color` will be this type. |
 | `DimensionValue` | 'block-size', 'bottom', 'column-gap', 'flex-basis', 'height', 'inline-size', 'left','letter-spacing' 'line-height', 'max-height', 'max-width', 'min-height', 'min-width', 'order', 'orphans', 'perspective', 'right', 'row-gap', 'tab-size', 'text-indent', 'top', 'vertical-align', 'widows', 'width', 'word-spacing', 'z-index' | A sumtype representing properties/values that represent a dimension/length, e.g. `10px`, or `50%`. |
-| `Font` | 'font' | struct containing all `font-` properties |
+| `Font` | 'font', 'font-family', 'font-size', 'font-stretch', 'font-weight' | struct containing all `font-` properties |
 | `FontFamily` | 'font-family' | will be merged into 'font' |
 | `FontStretch` | 'font-stretch' | a sumtype containing the possible font-stretch properties, will be merged into 'font' |
 | `FontWeight` | 'font-weight' | will be merged into 'font' |
@@ -86,6 +86,7 @@ the exact specification of each struct/sumtype.
 | `FlexSize` | 'flex-grow', 'flex-shrink' | will be merged into 'flex' |
 | `FlexWrap` | 'flex-wrap' | A sumtype containg the possible flex-wrap types, will be merged into 'flex' |
 | `FourDimensions` | 'padding', 'margin', 'border-width' | A struct containing 4 `DimensionValue` fields for top, right, bottom and left |
+| `Gap` | 'gap' | A struct containing 'row-gap' and 'column-gap' |
 | `Image` | 'background-image' | A sumtype holding the different values for the `image` CSS datatype |
 | `Keyword` | 'align-content', 'align-items', 'align-self', 'all', 'appearance', 'backface-visibility', 'border-collapse', 'box-sizing', 'caption-side', 'clear', 'cursor', 'direction', 'display', 'empty-cells', 'float', 'forced-color-adjust', 'isolation', 'justify-content', 'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit', 'overflow-x', 'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize', 'scroll-behavior', 'table-layout', 'text-align', 'text-align-last', 'text-justify', 'text-rendering', 'text-transform', 'text-wrap', 'touch-action', 'unicode-bidi', 'user-select', 'visibility', 'white-space', 'word-break', 'word-wrap', 'writing-mode' | A type alias for string representing a CSS keyword like `inherit` |
 | `Overflow` | 'overflow' | A struct containing the properties 'overflow-x' and 'overflow-y' |

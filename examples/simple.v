@@ -13,10 +13,7 @@ fn main() {
 	mut selector := [css.Selector(css.Type('p')), css.Class('test'), css.Id('what')]
 
 	// filter all rules that match `selector`
-	matching_rules := rules.filter(fn [selector] (rule css.Rule) bool {
-		return rule.matches(selector)
-	})
-
+	matching_rules := rules.get_matching(selector)
 	// build a map of styles from the matching rules
 	styles := matching_rules.get_styles()
 
