@@ -74,6 +74,18 @@ pub mut:
 	left   DimensionValue = css.zero_px
 }
 
+pub struct Font {
+pub mut:
+	family FontFamily
+	size   DimensionValue = datatypes.Length{
+		amount: 16
+		unit: .px
+	}
+	stretch FontStretch
+	style   Keyword    = Keyword('normal')
+	weight  FontWeight = 400
+}
+
 pub struct Text {
 pub mut:
 	align           ?string

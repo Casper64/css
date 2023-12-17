@@ -64,10 +64,10 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		'color' {
 			return pv.validate_single_color_prop(property, raw_value)!
 		}
-		'block-size', 'bottom', 'column-gap', 'flex-basis', 'height', 'inline-size', 'left',
-		'letter-spacing', 'line-height', 'max-height', 'max-width', 'min-height', 'min-width',
-		'order', 'orphans', 'perspective', 'right', 'row-gap', 'tab-size', 'text-indent', 'top',
-		'vertical-align', 'widows', 'width', 'word-spacing', 'z-index' {
+		'block-size', 'bottom', 'column-gap', 'flex-basis', 'font-size', 'height', 'inline-size',
+		'left', 'letter-spacing', 'line-height', 'max-height', 'max-width', 'min-height',
+		'min-width', 'order', 'orphans', 'perspective', 'right', 'row-gap', 'tab-size',
+		'text-indent', 'top', 'vertical-align', 'widows', 'width', 'word-spacing', 'z-index' {
 			return pv.validate_single_dimension_prop(property, raw_value)!
 		}
 		'opacity' {
@@ -82,9 +82,9 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		// TODO: these values aren't used that often, check if it's faster to match them at the end of the `else` clause
 		'align-content', 'align-items', 'align-self', 'all', 'appearance', 'backface-visibility',
 		'border-collapse', 'box-sizing', 'caption-side', 'clear', 'cursor', 'direction', 'display',
-		'empty-cells', 'float', 'forced-color-adjust', 'isolation', 'justify-content',
-		'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit', 'overflow-x',
-		'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize',
+		'empty-cells', 'float', 'font-style', 'forced-color-adjust', 'isolation',
+		'justify-content', 'justify-items', 'justify-self', 'mix-blend-mode', 'object-fit',
+		'overflow-x', 'overflow-y', 'pointer-events', 'position', 'print-color-adjust', 'resize',
 		'scroll-behavior', 'table-layout', 'text-align', 'text-align-last', 'text-justify',
 		'text-rendering', 'text-transform', 'text-wrap', 'touch-action', 'unicode-bidi',
 		'user-select', 'visibility', 'white-space', 'word-break', 'word-wrap', 'writing-mode' {
@@ -128,6 +128,15 @@ pub fn (mut pv PropertyValidator) validate_property(property string, raw_value a
 		}
 		'overflow' {
 			return pv.validate_overflow(raw_value)!
+		}
+		'font-family' {
+			return pv.validate_font_family(raw_value)!
+		}
+		'font-stretch' {
+			return pv.validate_font_stretch(raw_value)!
+		}
+		'font-weight' {
+			return pv.validate_font_weight(raw_value)!
 		}
 		else {
 			// handle properties with similair endings / starts
@@ -1151,5 +1160,118 @@ pub fn (pv &PropertyValidator) validate_flex(raw_value ast.Value) !css.FlexBox {
 	return ast.NodeError{
 		msg: 'invalid value for property "flex"'
 		pos: raw_value.pos
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_font_family(raw_value ast.Value) !css.FontFamily {
+	mut vals := []string{}
+
+	for child in raw_value.children {
+		match child {
+			ast.Ident {
+				vals << child.name
+			}
+			ast.String {
+				vals << child.value
+			}
+			ast.Operator {
+				if child.kind != .comma {
+					return ast.NodeError{
+						msg: 'unexpected operator'
+						pos: child.pos
+					}
+				}
+			}
+			else {
+				return ast.NodeError{
+					msg: 'invalid value for property "font-family"'
+					pos: child.pos()
+				}
+			}
+		}
+	}
+
+	return vals
+}
+
+pub fn (pv &PropertyValidator) validate_font_stretch(raw_value ast.Value) !css.FontStretch {
+	if raw_value.children.len != 1 {
+		return ast.NodeError{
+			msg: 'property "font-stretch" only expects 1 value!'
+			pos: raw_value.pos
+		}
+	}
+
+	child := raw_value.children[0]
+
+	if child is ast.Ident {
+		match child.name {
+			'normal' {
+				return datatypes.FontStretchKind.normal
+			}
+			'ultra-condensed' {
+				return datatypes.FontStretchKind.ultra_condensed
+			}
+			'extra-condensed' {
+				return datatypes.FontStretchKind.extra_condensed
+			}
+			'semi-condensed' {
+				return datatypes.FontStretchKind.semi_condensed
+			}
+			'expanded' {
+				return datatypes.FontStretchKind.expanded
+			}
+			'extra-expanded' {
+				return datatypes.FontStretchKind.extra_expanded
+			}
+			'ultra-expanded' {
+				return datatypes.FontStretchKind.ultra_expanded
+			}
+			'semi-expanded' {
+				return datatypes.FontStretchKind.semi_expanded
+			}
+			else {
+				return css.Keyword(child.name)
+			}
+		}
+	} else if child is ast.Dimension {
+		if child.unit == '%' {
+			return datatypes.Percentage(child.value.f64() / 100)
+		}
+	}
+
+	return ast.NodeError{
+		msg: 'invalid value for property "font-stretch"'
+		pos: child.pos()
+	}
+}
+
+pub fn (pv &PropertyValidator) validate_font_weight(raw_value ast.Value) !css.FontWeight {
+	if raw_value.children.len != 1 {
+		return ast.NodeError{
+			msg: 'property "font-weight" only expects 1 value!'
+			pos: raw_value.pos
+		}
+	}
+
+	child := raw_value.children[0]
+	if child is ast.Number {
+		val := child.value.int()
+
+		if val < 1 || val > 1000 {
+			return ast.NodeError{
+				msg: 'Font weight must be between [1, 1000]'
+				pos: child.pos
+			}
+		}
+
+		return css.FontWeight(val)
+	} else if child is ast.Ident {
+		return css.Keyword(child.name)
+	}
+
+	return ast.NodeError{
+		msg: 'invalid value for property "font-weight"'
+		pos: child.pos()
 	}
 }

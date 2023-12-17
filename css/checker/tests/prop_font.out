@@ -1,0 +1,55 @@
+css/checker/tests/prop_font.css:4:18: error: invalid value for property "font-family"
+    2 | .font-family {
+    3 |     font-family: 'Courier New', Courier, monospace;
+    4 |     font-family: 10px;
+      |                  ~~~~
+    5 |     font-family: 'Whaaat' + COurier;
+    6 | }
+css/checker/tests/prop_font.css:5:27: error: unexpected operator
+    3 |     font-family: 'Courier New', Courier, monospace;
+    4 |     font-family: 10px;
+    5 |     font-family: 'Whaaat' + COurier;
+      |                           ^
+    6 | }
+    7 |
+css/checker/tests/prop_font.css:9:19: error: invalid value for property "font-stretch"
+    7 | 
+    8 | .font-stretch {
+    9 |     font-stretch: 20px;
+      |                   ~~~~
+   10 |     font-stretch: normal;
+   11 |     font-stretch: other double;
+css/checker/tests/prop_font.css:11:19: error: property "font-stretch" only expects 1 value!
+    9 |     font-stretch: 20px;
+   10 |     font-stretch: normal;
+   11 |     font-stretch: other double;
+      |                   ~~~~~~~~~~~~~
+   12 |     font-stretch: 'test';
+   13 | }
+css/checker/tests/prop_font.css:12:19: error: invalid value for property "font-stretch"
+   10 |     font-stretch: normal;
+   11 |     font-stretch: other double;
+   12 |     font-stretch: 'test';
+      |                   ~~~~~~
+   13 | }
+   14 |
+css/checker/tests/prop_font.css:16:18: error: Font weight must be between [1, 1000]
+   14 | 
+   15 | .font-weight {
+   16 |     font-weight: -1;
+      |                  ~~
+   17 |     font-weight: 1001;
+   18 |     font-weight: 500;
+css/checker/tests/prop_font.css:17:18: error: Font weight must be between [1, 1000]
+   15 | .font-weight {
+   16 |     font-weight: -1;
+   17 |     font-weight: 1001;
+      |                  ~~~~
+   18 |     font-weight: 500;
+   19 |     font-weight: 'omg';
+css/checker/tests/prop_font.css:19:18: error: invalid value for property "font-weight"
+   17 |     font-weight: 1001;
+   18 |     font-weight: 500;
+   19 |     font-weight: 'omg';
+      |                  ~~~~~
+   20 | }

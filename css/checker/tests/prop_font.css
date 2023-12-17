@@ -1,0 +1,20 @@
+
+.font-family {
+    font-family: 'Courier New', Courier, monospace;
+    font-family: 10px;
+    font-family: 'Whaaat' + COurier;
+}
+
+.font-stretch {
+    font-stretch: 20px;
+    font-stretch: normal;
+    font-stretch: other double;
+    font-stretch: 'test';
+}
+
+.font-weight {
+    font-weight: -1;
+    font-weight: 1001;
+    font-weight: 500;
+    font-weight: 'omg';
+}

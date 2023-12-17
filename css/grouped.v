@@ -20,6 +20,8 @@ fn set_grouped(prop_name string, value Value, mut style_map map[string]Value) {
 		set_grouped_border(prop_name, value, mut style_map)
 	} else if prop_name.starts_with('flex') {
 		set_grouped_flex(prop_name, value, mut style_map)
+	} else if prop_name.starts_with('font') {
+		set_grouped_font(prop_name, value, mut style_map)
 	} else {
 		style_map[prop_name] = value
 	}
@@ -261,4 +263,18 @@ fn set_grouped_flex(prop_name string, value Value, mut style_map map[string]Valu
 	}
 
 	style_map['flex'] = flex_val
+}
+
+fn set_grouped_font(prop_name string, value Value, mut style_map map[string]Value) {
+	mut font_val := (style_map['font'] or { Font{} }) as Font
+
+	match prop_name {
+		'font-family' { font_val.family = value as FontFamily }
+		'font-size' { font_val.size = value as DimensionValue }
+		'font-stretch' { font_val.stretch = value as FontStretch }
+		'font-weight' { font_val.weight = value as FontWeight }
+		else {}
+	}
+
+	style_map['font'] = font_val
 }

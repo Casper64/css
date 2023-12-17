@@ -30,6 +30,10 @@ pub type Value = AlphaValue
 	| FlexDirection
 	| FlexSize
 	| FlexWrap
+	| Font
+	| FontFamily
+	| FontStretch
+	| FontWeight
 	| FourDimensions
 	| Gradient
 	| Image
@@ -354,3 +358,7 @@ pub type BorderLineStyle = Keyword | datatypes.LineStyle
 pub type FlexSize = Keyword | f64
 pub type FlexDirection = Keyword | datatypes.FlexDirectionKind
 pub type FlexWrap = Keyword | datatypes.FlexWrapKind
+
+pub type FontStretch = Keyword | datatypes.FontStretchKind | datatypes.Percentage
+pub type FontWeight = Keyword | int
+pub type FontFamily = []string

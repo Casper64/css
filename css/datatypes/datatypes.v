@@ -118,3 +118,14 @@ pub enum FlexWrapKind {
 	wrap
 	wrap_reverse
 }
+
+pub enum FontStretchKind {
+	normal
+	ultra_condensed
+	extra_condensed
+	semi_condensed
+	expanded
+	extra_expanded
+	ultra_expanded
+	semi_expanded
+}
