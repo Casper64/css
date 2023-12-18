@@ -1,7 +1,7 @@
 module main
 
-import css
-import css.util as css_util
+import casper64.css
+import casper64.css.util as css_util
 import os
 
 fn main() {

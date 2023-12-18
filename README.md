@@ -12,6 +12,15 @@ so the programmer only needs to implement a way to render the rules.
 **Acknowledgement:**
 A lot of inpsiration (and some code) is taken from the V compiler.
 
+## Installation
+
+Install via the V package manager:
+```bash
+v install Casper64.css
+```
+
+Or add `Casper64.css` to the depencies array in your `v.mod` file and run `v install`.
+
 ## Features
 
 - 100% Written in V
