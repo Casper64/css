@@ -45,7 +45,7 @@ v run examples/simple.v
 If you are confused why the resulting color is `red` please referer to 
 [CSS specificity](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
 
-The `css/tests` folder also contains examples on how properties can be used.
+The [properties](css/tests/properties/) folder also contains examples on how properties can be used.
 
 ## Tests
 
