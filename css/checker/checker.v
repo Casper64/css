@@ -30,7 +30,7 @@ pub fn (pv &PropertyValidator) unsupported_property(property string) string {
 	return 'unsupported property "${property}"! Check the "CAN_I_USE.md" for a list of supported properties'
 }
 
-pub fn validate(tree &ast.StyleSheet, mut table ast.Table, prefs &pref.Preferences) ![]css.Rule {
+pub fn validate(tree &ast.StyleSheet, mut table ast.Table, prefs pref.Preferences) ![]css.Rule {
 	mut checker := &Checker{
 		file_path: tree.file_path
 		prefs: prefs
@@ -54,7 +54,7 @@ pub fn validate(tree &ast.StyleSheet, mut table ast.Table, prefs &pref.Preferenc
 
 @[heap; minify]
 pub struct Checker {
-	prefs     &pref.Preferences
+	prefs     pref.Preferences
 	file_path string
 mut:
 	error_details []string

@@ -6,7 +6,7 @@ const css_file = '${@VMODROOT}/tests/testdata/bootstrap.css'
 const min_css_file = '${@VMODROOT}/tests/testdata/bootstrap.min.css'
 
 fn test_no_errors() {
-	mut p := parser.Parser.new(&pref.Preferences{
+	mut p := parser.Parser.new(pref.Preferences{
 		suppress_output: true
 		is_strict: true
 	})
@@ -17,7 +17,7 @@ fn test_no_errors() {
 }
 
 fn test_no_errors_minified() {
-	mut p := parser.Parser.new(&pref.Preferences{
+	mut p := parser.Parser.new(pref.Preferences{
 		suppress_output: true
 	})
 	p.table = &ast.Table{}

@@ -10,7 +10,7 @@ import os
 const double_quote = '"'
 
 pub struct Parser {
-	prefs &pref.Preferences
+	prefs pref.Preferences
 mut:
 	file_name              string // "/css/main.css"
 	tok                    token.Token
@@ -31,7 +31,7 @@ pub mut:
 }
 
 // todo: add options?
-pub fn Parser.new(prefs &pref.Preferences) &Parser {
+pub fn Parser.new(prefs pref.Preferences) &Parser {
 	return &Parser{
 		prefs: prefs
 	}

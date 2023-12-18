@@ -2,7 +2,7 @@ import css
 import css.pref
 import css.util as css_util
 
-const preferences = &pref.Preferences{}
+const preferences = pref.Preferences{}
 
 fn test_background_can_group() {
 	rules := css_util.parse_stylesheet_from_text('.t {

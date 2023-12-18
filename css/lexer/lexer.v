@@ -11,7 +11,7 @@ const backslash = `\\`
 const b_lf = 10
 const b_cr = 13
 
-pub fn new_lexer_file(prefs &pref.Preferences, file_path string) !&Lexer {
+pub fn new_lexer_file(prefs pref.Preferences, file_path string) !&Lexer {
 	if !os.is_file(file_path) {
 		return error('${file_path} is not a .css file')
 	}
@@ -30,7 +30,7 @@ pub fn new_lexer_file(prefs &pref.Preferences, file_path string) !&Lexer {
 }
 
 pub struct Lexer {
-	prefs &pref.Preferences
+	prefs pref.Preferences
 pub:
 	file_path string
 pub mut:

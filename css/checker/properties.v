@@ -1,5 +1,9 @@
 module checker
 
+// This file implements CSS properties following the MDN spec. If you read the spec
+// along with the code it makes sense. It just basically matches ast nodes in a
+// value (ast.Value) and checking if its the correct type, then transforming it in a `css`
+// type/struct from the `css` upper module and throwing errors/warnings when it needs to.
 import css
 import css.ast
 import css.datatypes

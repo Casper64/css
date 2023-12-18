@@ -28,7 +28,7 @@ pub fn parse_file(file string, strict bool, mut table ast.Table) !&ast.StyleShee
 
 // minify_file doesn't validate the css and only writes a minified version of the file
 pub fn minify_file(src_file string, out_file string) ! {
-	prefs := &pref.Preferences{}
+	prefs := pref.Preferences{}
 	mut p := parser.Parser.new(prefs)
 	p.table = &ast.Table{}
 	tree := p.parse_file(src_file)
@@ -41,7 +41,7 @@ pub fn minify_file(src_file string, out_file string) ! {
 
 // minify_file doesn't validate the css and only writes a prettified version of the file
 pub fn prettify_file(src_file string, out_file string) ! {
-	prefs := &pref.Preferences{}
+	prefs := pref.Preferences{}
 	mut p := parser.Parser.new(prefs)
 	p.table = &ast.Table{}
 	tree := p.parse_file(src_file)
@@ -52,7 +52,7 @@ pub fn prettify_file(src_file string, out_file string) ! {
 	os.write_file(out_file, minified)!
 }
 
-pub fn parse_stylesheet_from_text(src string, prefs &pref.Preferences) ![]css.Rule {
+pub fn parse_stylesheet_from_text(src string, prefs pref.Preferences) ![]css.Rule {
 	mut table := &ast.Table{}
 
 	mut p := parser.Parser.new(prefs)
@@ -64,7 +64,7 @@ pub fn parse_stylesheet_from_text(src string, prefs &pref.Preferences) ![]css.Ru
 	return rules
 }
 
-pub fn parse_stylesheet(css_file string, prefs &pref.Preferences) ![]css.Rule {
+pub fn parse_stylesheet(css_file string, prefs pref.Preferences) ![]css.Rule {
 	mut table := &ast.Table{}
 
 	mut p := parser.Parser.new(prefs)

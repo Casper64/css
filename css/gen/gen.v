@@ -10,7 +10,7 @@ pub struct GenOptions {
 }
 
 pub struct Gen {
-	prefs      &pref.Preferences
+	prefs      pref.Preferences
 	minify     bool
 	stylesheet &ast.StyleSheet
 mut:
@@ -19,7 +19,7 @@ mut:
 	parentheses_depth int
 }
 
-pub fn generate(stylesheet &ast.StyleSheet, opts GenOptions, prefs &pref.Preferences) string {
+pub fn generate(stylesheet &ast.StyleSheet, opts GenOptions, prefs pref.Preferences) string {
 	mut global_g := &Gen{
 		prefs: prefs
 		minify: opts.minify
