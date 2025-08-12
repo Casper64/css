@@ -1,7 +1,11 @@
+## Disclaimer
+
+I will not finish this project. It's too big. At least I've learned a lot about compilers and parsing :)
+I followed the structure of the V compiler, so feel free to take inspiration from my project.
+
 # CSS Parser
 > **Note:**
-> This CSS parser is not suited for production yet and the API will change in the future!
-
+> This CSS parser will never be finished.
 
 The aim of this module is to serve as an intermediate stage in graphics rendering
 by supporting CSS as styling language.
